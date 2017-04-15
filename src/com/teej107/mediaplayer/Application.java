@@ -4,6 +4,8 @@ import com.teej107.mediaplayer.io.ApplicationPreferences;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
 import com.teej107.mediaplayer.util.ComparableObject;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
 
 /**
@@ -11,11 +13,12 @@ import java.util.*;
  */
 public class Application implements Comparator<ComparableObject<Runnable>>
 {
+	private static final Application APPLICATION = new Application();
 	private SortedSet<ComparableObject<Runnable>> shutdownHooks;
 	private ApplicationPreferences applicationPreferences;
 	private ApplicationFrame applicationFrame;
 
-	protected Application()
+	private Application()
 	{
 		this.shutdownHooks = new TreeSet<>(this);
 
@@ -24,8 +27,13 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		this.applicationFrame.setVisible(true);
 	}
 
+	public static Application instance()
+	{
+		return APPLICATION;
+	}
+
 	/**
-	 * Get the application name
+	 * Get the application getName
 	 * @return application name
 	 */
 	public String getName()

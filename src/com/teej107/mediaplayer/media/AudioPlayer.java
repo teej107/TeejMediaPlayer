@@ -1,6 +1,7 @@
 package com.teej107.mediaplayer.media;
 
 import com.teej107.mediaplayer.media.audio.ISong;
+import com.teej107.mediaplayer.media.volume.VolumeManager;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -11,18 +12,20 @@ import java.net.URI;
  */
 public class AudioPlayer
 {
+	private VolumeManager volumeManager;
 	private MediaPlayer mediaPlayer;
 	private ISong currentSong;
 
-	public AudioPlayer()
+	public AudioPlayer(VolumeManager volumeManager)
 	{
-
+		this.volumeManager = volumeManager;
 	}
 
 	public void setSong(ISong song)
 	{
 		stop();
 		this.mediaPlayer = new MediaPlayer(new Media(song.getURI().toString()));
+		this.mediaPlayer.setVolume(volumeManager.getVolume());
 		this.currentSong = song;
 	}
 
