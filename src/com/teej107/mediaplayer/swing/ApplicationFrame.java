@@ -30,7 +30,21 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 
 		setContentPane(new ApplicationPanel());
 
+		setChildrenUnfocusable((JComponent) getContentPane());
+
 		application.addShutdownHook(this, Integer.MAX_VALUE - 1);
+	}
+
+	private void setChildrenUnfocusable(JComponent component)
+	{
+		component.setFocusable(false);
+		for (Component child : component.getComponents())
+		{
+			if (child instanceof JComponent)
+			{
+				setChildrenUnfocusable((JComponent) child);
+			}
+		}
 	}
 
 	@Override

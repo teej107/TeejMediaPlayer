@@ -24,11 +24,11 @@ public class VolumeManager
 
 	public void setVolume(double volume)
 	{
+		this.volume = volume;
 		for(VolumeChangeListener listener : volumeChangeListeners)
 		{
-			listener.onVolumeChange(this.volume, volume);
+			listener.onVolumeChange(volume);
 		}
-		this.volume = volume;
 	}
 
 	public boolean addVolumeChangeListener(VolumeChangeListener listener)

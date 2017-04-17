@@ -1,11 +1,15 @@
 package com.teej107.mediaplayer;
 
 import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.io.db.DatabaseManager;
+import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
 import com.teej107.mediaplayer.util.ComparableObject;
 
 import javax.swing.*;
-import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -17,12 +21,28 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private SortedSet<ComparableObject<Runnable>> shutdownHooks;
 	private ApplicationPreferences applicationPreferences;
 	private ApplicationFrame applicationFrame;
+	private DatabaseManager databaseManager;
 
 	private Application()
 	{
 		this.shutdownHooks = new TreeSet<>(this);
-
 		this.applicationPreferences = new ApplicationPreferences(this);
+	}
+
+	protected void init()
+	{
+		try
+		{
+			Files.createDirectories(Platform.getPlatform().getAppDataDirectory());
+			this.databaseManager = new DatabaseManager(Paths.get(Platform.getPlatform().getAppDataDirectory().toString(), "storage.db"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			exit();
+		}
+
 		this.applicationFrame = new ApplicationFrame(this);
 		this.applicationFrame.setVisible(true);
 	}
@@ -34,6 +54,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 
 	/**
 	 * Get the application getName
+	 *
 	 * @return application name
 	 */
 	public String getName()
@@ -48,6 +69,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 
 	/**
 	 * Add a shutdown hook to run code when the application exits
+	 *
 	 * @param runnable Runnable object
 	 * @param priority priority of when the Runnable run method should be invoked. Lower integers run first. Higher integers run last.
 	 */
@@ -61,7 +83,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	 */
 	public void exit()
 	{
-		for(ComparableObject<Runnable> obj : shutdownHooks)
+		for (ComparableObject<Runnable> obj : shutdownHooks)
 		{
 			obj.getObject().run();
 		}

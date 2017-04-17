@@ -5,5 +5,5 @@ package com.teej107.mediaplayer.media.volume;
  */
 public interface VolumeChangeListener
 {
-	void onVolumeChange(double oldValue, double newValue);
+	void onVolumeChange(double volume);
 }

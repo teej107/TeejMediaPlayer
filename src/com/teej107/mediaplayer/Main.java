@@ -1,7 +1,6 @@
 package com.teej107.mediaplayer;
 
 import com.sun.javafx.application.PlatformImpl;
-import com.teej107.mediaplayer.platform.Platform;
 
 import javax.swing.*;
 
@@ -12,7 +11,15 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		PlatformImpl.startup(() -> {});
-		SwingUtilities.invokeLater(() -> Application.instance());
+		SwingUtilities.invokeLater(() -> Application.instance().init());
 	}
 }
