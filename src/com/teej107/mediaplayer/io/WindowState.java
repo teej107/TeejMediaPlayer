@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class WindowState
 {
+	private static final Rectangle SCREEN = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 	private static final String WIDTH = "width";
 	private static final String HEIGHT = "height";
 	private static final String X = "x";
@@ -35,6 +36,7 @@ public class WindowState
 
 	/**
 	 * Loads the window state data
+	 *
 	 * @return a Response whether the method has successfully loaded the data or not
 	 */
 	protected Response load()
@@ -53,6 +55,7 @@ public class WindowState
 
 	/**
 	 * Set the window size
+	 *
 	 * @param d Dimension object
 	 */
 	public void setWindowSize(Dimension d)
@@ -63,16 +66,18 @@ public class WindowState
 
 	/**
 	 * Get the window size
+	 *
 	 * @return Dimension object
 	 */
 	public Dimension getWindowSize()
 	{
-		return new Dimension(((Number) dataMap.getOrDefault(WIDTH, 800)).intValue(),
-				((Number) dataMap.getOrDefault(HEIGHT, 600)).intValue());
+		return new Dimension(((Number) dataMap.getOrDefault(WIDTH, SCREEN.width / 1.5)).intValue(),
+				((Number) dataMap.getOrDefault(HEIGHT, SCREEN.height / 1.3)).intValue());
 	}
 
 	/**
 	 * Set the window location
+	 *
 	 * @param point Point object
 	 */
 	public void setLocation(Point point)
@@ -83,15 +88,17 @@ public class WindowState
 
 	/**
 	 * Get the window location
+	 *
 	 * @return Point object
 	 */
 	public Point getLocation()
 	{
-		return new Point(((Number) dataMap.getOrDefault(X, 0)).intValue(), ((Number) dataMap.getOrDefault(Y, 0)).intValue());
+		return new Point(((Number) dataMap.getOrDefault(X, 20)).intValue(), ((Number) dataMap.getOrDefault(Y, 20)).intValue());
 	}
 
 	/**
 	 * Set the window state ie: maximized
+	 *
 	 * @param state
 	 */
 	public void setWindowState(int state)
@@ -101,6 +108,7 @@ public class WindowState
 
 	/**
 	 * Set the window state ie: JFrame.MAXIMIZED_BOTH
+	 *
 	 * @return
 	 */
 	public int getWindowState()
@@ -110,6 +118,7 @@ public class WindowState
 
 	/**
 	 * Get the raw JSON data
+	 *
 	 * @return JSON string
 	 */
 	@Override
