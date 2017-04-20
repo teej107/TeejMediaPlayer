@@ -11,15 +11,22 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+		setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		PlatformImpl.startup(() -> {});
+		SwingUtilities.invokeLater(() -> Application.instance().init());
+	}
+
+	private static boolean setLookAndFeel(String s)
+	{
 		try
 		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(s);
+			return true;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return false;
 		}
-		PlatformImpl.startup(() -> {});
-		SwingUtilities.invokeLater(() -> Application.instance().init());
 	}
 }
