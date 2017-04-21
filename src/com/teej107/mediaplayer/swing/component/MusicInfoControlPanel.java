@@ -24,7 +24,8 @@ public class MusicInfoControlPanel extends JPanel
 		this.volumeControlPanel = new VolumeControlPanel(new VolumeManager(1));
 
 
-		add(albumCoverPanel, BorderLayout.CENTER);
+
+		this.controlsPanel.add(albumCoverPanel, BorderLayout.PAGE_START);
 		this.controlsPanel.add(playbackControlPanel, BorderLayout.CENTER);
 		this.controlsPanel.add(volumeControlPanel, BorderLayout.PAGE_END);
 		add(controlsPanel, BorderLayout.PAGE_END);

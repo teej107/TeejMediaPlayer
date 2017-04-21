@@ -15,7 +15,7 @@ public class DatabaseSong implements ISong
 	}
 
 	@Override
-	public String getName()
+	public String getTitle()
 	{
 		return null;
 	}

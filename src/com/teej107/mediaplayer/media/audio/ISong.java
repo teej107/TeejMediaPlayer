@@ -7,7 +7,7 @@ import java.net.URI;
  */
 public interface ISong
 {
-	String getName();
+	String getTitle();
 	String getArtist();
 	String getGenre();
 	String getAlbum();

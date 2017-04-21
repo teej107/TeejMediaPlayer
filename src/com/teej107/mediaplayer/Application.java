@@ -2,6 +2,7 @@ package com.teej107.mediaplayer;
 
 import com.teej107.mediaplayer.io.ApplicationPreferences;
 import com.teej107.mediaplayer.io.db.DatabaseManager;
+import com.teej107.mediaplayer.media.volume.VolumeManager;
 import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
 import com.teej107.mediaplayer.util.ComparableObject;
@@ -22,11 +23,13 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private ApplicationPreferences applicationPreferences;
 	private ApplicationFrame applicationFrame;
 	private DatabaseManager databaseManager;
+	private VolumeManager volumeManager;
 
 	private Application()
 	{
 		this.shutdownHooks = new TreeSet<>(this);
 		this.applicationPreferences = new ApplicationPreferences(this);
+		this.volumeManager = new VolumeManager(0.5);
 	}
 
 	protected void init()
@@ -53,7 +56,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	}
 
 	/**
-	 * Get the application getName
+	 * Get the application getTitle
 	 *
 	 * @return application name
 	 */
@@ -65,6 +68,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	public ApplicationPreferences getApplicationPreferences()
 	{
 		return applicationPreferences;
+	}
+
+	public VolumeManager getVolumeManager()
+	{
+		return volumeManager;
 	}
 
 	/**

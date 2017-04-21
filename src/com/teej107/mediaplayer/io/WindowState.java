@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Class for managing the state of the application window
  */
-public class WindowState
+public class WindowState extends AbstractJsonState
 {
 	private static final Rectangle SCREEN = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 	private static final String WIDTH = "width";
@@ -21,36 +21,12 @@ public class WindowState
 	private static final String Y = "y";
 	private static final String STATE = "state";
 
-	private String rawData;
-	private JSONParser jsonParser;
-	private Map<String, Object> dataMap;
-
 	/**
 	 * @param rawData JSON format data
 	 */
 	protected WindowState(String rawData)
 	{
-		this.rawData = rawData;
-		this.jsonParser = new JSONParser();
-	}
-
-	/**
-	 * Loads the window state data
-	 *
-	 * @return a Response whether the method has successfully loaded the data or not
-	 */
-	protected Response load()
-	{
-		try
-		{
-			dataMap = (rawData == null ? new JSONObject() : (Map<String, Object>) jsonParser.parse(rawData));
-			return Response.createOkResponse("WindowState loaded");
-		}
-		catch (ParseException e)
-		{
-			dataMap = new JSONObject();
-			return Response.createErrorResponse("Failed to load data:", e.getMessage());
-		}
+		super(rawData);
 	}
 
 	/**
@@ -114,16 +90,5 @@ public class WindowState
 	public int getWindowState()
 	{
 		return ((Number) dataMap.getOrDefault(STATE, JFrame.MAXIMIZED_BOTH)).intValue();
-	}
-
-	/**
-	 * Get the raw JSON data
-	 *
-	 * @return JSON string
-	 */
-	@Override
-	public String toString()
-	{
-		return dataMap.toString();
 	}
 }
