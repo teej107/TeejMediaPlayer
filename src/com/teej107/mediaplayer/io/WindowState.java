@@ -91,4 +91,6 @@ public class WindowState extends AbstractJsonState
 	{
 		return ((Number) dataMap.getOrDefault(STATE, JFrame.MAXIMIZED_BOTH)).intValue();
 	}
+
+
 }

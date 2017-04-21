@@ -87,7 +87,14 @@ public class ApplicationPreferences implements Runnable
 	@Override
 	public void run()
 	{
-		setWindowStateRawData(windowState.toString());
-		setPlayerStateRawData(playerState.toString());
+		try
+		{
+			setWindowStateRawData(windowState.call());
+			setPlayerStateRawData(playerState.call());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

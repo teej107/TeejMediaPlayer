@@ -20,7 +20,7 @@ public class VolumeControlPanel extends JPanel implements ChangeListener
 		super(new BorderLayout());
 		this.volumeManager = volumeManager;
 		this.volumeSlider = new JSlider(0, 100);
-		this.volumeSlider.setValue((int) volumeManager.getVolume());
+		this.volumeSlider.setValue((int) (volumeManager.getVolume() * 100));
 		this.volumeSlider.addChangeListener(this);
 		add(volumeSlider, BorderLayout.CENTER);
 	}
@@ -28,6 +28,6 @@ public class VolumeControlPanel extends JPanel implements ChangeListener
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
-		volumeManager.setVolume(volumeSlider.getValue() / volumeSlider.getMaximum());
+		volumeManager.setVolume((double) volumeSlider.getValue() / volumeSlider.getMaximum());
 	}
 }

@@ -7,6 +7,7 @@ import com.teej107.mediaplayer.media.volume.VolumeManager;
 import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
 import com.teej107.mediaplayer.util.ComparableObject;
+import com.teej107.mediaplayer.util.SwingEDT;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		this.audioPlayer = new AudioPlayer(volumeManager);
 	}
 
-	protected void init()
+	protected Application init()
 	{
 		try
 		{
@@ -48,9 +49,16 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			exit();
 		}
+		return this;
+	}
 
-		this.applicationFrame = new ApplicationFrame(this);
-		this.applicationFrame.setVisible(true);
+	protected void createGui()
+	{
+		SwingEDT.invoke(() ->
+		{
+			this.applicationFrame = new ApplicationFrame(this);
+			this.applicationFrame.setVisible(true);
+		});
 	}
 
 	public static Application instance()

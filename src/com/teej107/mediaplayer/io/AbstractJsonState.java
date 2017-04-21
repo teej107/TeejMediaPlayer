@@ -6,11 +6,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by teej107 on 4/20/17.
  */
-public abstract class AbstractJsonState
+public abstract class AbstractJsonState implements Callable<String>
 {
 	protected String rawData;
 	protected JSONParser jsonParser;
@@ -42,6 +43,12 @@ public abstract class AbstractJsonState
 			dataMap = new JSONObject();
 			return Response.createErrorResponse("Failed to load data:", e.getMessage());
 		}
+	}
+
+	@Override
+	public String call() throws Exception
+	{
+		return toString();
 	}
 
 	@Override
