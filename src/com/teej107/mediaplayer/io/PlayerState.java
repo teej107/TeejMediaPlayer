@@ -28,7 +28,7 @@ public class PlayerState extends AbstractJsonState
 		Double dble = (Double) dataMap.get(VOLUME);
 		if (dble == null)
 			return VolumeManager.getSystemVolumeLevel();
-		
+
 		return dble.doubleValue();
 	}
 }

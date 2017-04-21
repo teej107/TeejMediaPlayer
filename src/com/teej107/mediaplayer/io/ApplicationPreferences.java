@@ -15,22 +15,27 @@ import java.util.prefs.Preferences;
 public class ApplicationPreferences implements Runnable
 {
 	private static final String WINDOW_STATE = "window-state";
+	private static final String PLAYER_STATE = "player-state";
 	private static final String MUSIC_ROOT_DIR = "music-root-directory";
 
 	private Preferences prefs;
 	private WindowState windowState;
+	private PlayerState playerState;
 
 	public ApplicationPreferences(Application application)
 	{
 		this.prefs = Preferences.userRoot().node(application.getName());
 
 		windowState = new WindowState(getWindowStateRawData());
-		Response response = windowState.load();
-		if (response.getStatus() == Response.ERROR)
+		Response windowResponse = windowState.load();
+		if (windowResponse.getStatus() == Response.ERROR)
 		{
-			System.out.println(response.getMessageAsString());
-			JOptionPane.showMessageDialog(null, response.getMessageAsString(), WINDOW_STATE, JOptionPane.ERROR_MESSAGE);
+			System.out.println(windowResponse.getMessageAsString());
+			JOptionPane.showMessageDialog(null, windowResponse.getMessageAsString(), WINDOW_STATE, JOptionPane.ERROR_MESSAGE);
 		}
+
+		playerState = new PlayerState(getPlayerStateRawData());
+		Response playerResponce = playerState.load();
 
 		application.addShutdownHook(this, Integer.MAX_VALUE);
 	}
@@ -45,6 +50,16 @@ public class ApplicationPreferences implements Runnable
 		prefs.put(WINDOW_STATE, rawData);
 	}
 
+	private String getPlayerStateRawData()
+	{
+		return prefs.get(PLAYER_STATE, null);
+	}
+
+	private void setPlayerStateRawData(String rawData)
+	{
+		prefs.put(PLAYER_STATE, rawData);
+	}
+
 	/**
 	 * Get the WindowState object
 	 *
@@ -53,6 +68,11 @@ public class ApplicationPreferences implements Runnable
 	public WindowState getWindowState()
 	{
 		return windowState;
+	}
+
+	public PlayerState getPlayerState()
+	{
+		return playerState;
 	}
 
 	public Path getMusicRootDirectory()
@@ -68,5 +88,6 @@ public class ApplicationPreferences implements Runnable
 	public void run()
 	{
 		setWindowStateRawData(windowState.toString());
+		setPlayerStateRawData(playerState.toString());
 	}
 }

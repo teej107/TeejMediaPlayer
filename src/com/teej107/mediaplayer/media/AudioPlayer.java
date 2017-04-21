@@ -50,6 +50,11 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		});
 	}
 
+	public VolumeManager getVolumeManager()
+	{
+		return volumeManager;
+	}
+
 	public ISong getSong()
 	{
 		return currentSong;

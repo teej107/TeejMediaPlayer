@@ -20,6 +20,7 @@ public class VolumeControlPanel extends JPanel implements ChangeListener
 		super(new BorderLayout());
 		this.volumeManager = volumeManager;
 		this.volumeSlider = new JSlider(0, 100);
+		this.volumeSlider.setValue((int) volumeManager.getVolume());
 		this.volumeSlider.addChangeListener(this);
 		add(volumeSlider, BorderLayout.CENTER);
 	}

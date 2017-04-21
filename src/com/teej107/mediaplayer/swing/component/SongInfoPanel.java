@@ -18,9 +18,9 @@ public class SongInfoPanel extends JPanel implements SongChangeListener
 	{
 		this.audioPlayer = audioPlayer;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.title = new JLabel("", JLabel.CENTER);
-		this.artist = new JLabel("", JLabel.CENTER);
-		this.album = new JLabel("", JLabel.CENTER);
+		this.title = new JLabel("---", JLabel.CENTER);
+		this.artist = new JLabel("---", JLabel.CENTER);
+		this.album = new JLabel("---", JLabel.CENTER);
 
 		add(title);
 		add(artist);

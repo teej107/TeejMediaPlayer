@@ -25,7 +25,7 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 
 		add(currentTime, BorderLayout.LINE_START);
 		add(durationSlider, BorderLayout.CENTER);
-		add(remainingTime, BorderLayout.PAGE_END);
+		add(remainingTime, BorderLayout.LINE_END);
 	}
 
 	@Override
