@@ -8,6 +8,7 @@ import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
 import com.teej107.mediaplayer.util.ComparableObject;
 import com.teej107.mediaplayer.util.SwingEDT;
+import com.teej107.mediaplayer.server.NodeRuntime;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private DatabaseManager databaseManager;
 	private VolumeManager volumeManager;
 	private AudioPlayer audioPlayer;
+	private NodeRuntime nodeRuntime;
 
 	private Application()
 	{
@@ -42,6 +44,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		{
 			Files.createDirectories(Platform.getPlatform().getAppDataDirectory());
 			this.databaseManager = new DatabaseManager(Paths.get(Platform.getPlatform().getAppDataDirectory().toString(), "storage.db"));
+			this.nodeRuntime = new NodeRuntime(this);
 		}
 		catch (IOException e)
 		{
@@ -49,6 +52,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			exit();
 		}
+		nodeRuntime.start();
 		return this;
 	}
 
@@ -116,6 +120,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		{
 			obj.getObject().run();
 		}
+		nodeRuntime.stop();
 		System.exit(0);
 	}
 

@@ -12,5 +12,6 @@
     <orderEntry type="library" name="jfxrt" level="project" />
     <orderEntry type="library" name="weblaf-complete-1.28" level="project" />
     <orderEntry type="library" name="jaudiotagger-2.2.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0" level="project" />
   </component>
 </module>
