@@ -59,4 +59,10 @@ public class Platform implements OSPlatform
 	{
 		return Paths.get(getHome(), Application.instance().getName());
 	}
+
+	@Override
+	public String getTerminate()
+	{
+		return "Exit";
+	}
 }

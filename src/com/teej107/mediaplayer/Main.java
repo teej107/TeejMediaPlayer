@@ -13,7 +13,10 @@ public class Main
 	public static void main(String[] args)
 	{
 		List<String> arguments = toArgumentList(args);
-		setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		if(!setLookAndFeel("com.alee.laf.WebLookAndFeel"))
+		{
+			setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
 		PlatformImpl.startup(() -> {});
 		Application app = Application.instance().init();
 		if(!arguments.contains("-server"))

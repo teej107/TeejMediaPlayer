@@ -8,13 +8,16 @@ import java.util.*;
  */
 public class Row extends LinkedHashMap<String, Object>
 {
+	private List<String> columns;
+
 	public Row(ResultSet set) throws SQLException
 	{
 		ResultSetMetaData meta = set.getMetaData();
-		for (int i = 0; i < meta.getColumnCount(); i++)
+		for (int i = 1; i <= meta.getColumnCount(); i++)
 		{
 			put(meta.getColumnName(i), set.getObject(i));
 		}
+		this.columns = new ArrayList<>(getColumns());
 	}
 
 	public Set<String> getColumns()
@@ -31,5 +34,10 @@ public class Row extends LinkedHashMap<String, Object>
 			return (T) o;
 
 		throw new IllegalArgumentException("Class " + t.getName() + " not of type " + o.getClass().getName());
+	}
+
+	public <T> T getObject(int column, Class<T> t)
+	{
+		return getObject(columns.get(column), t);
 	}
 }

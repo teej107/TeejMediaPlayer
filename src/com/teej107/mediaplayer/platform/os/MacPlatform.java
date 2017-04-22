@@ -16,4 +16,10 @@ public class MacPlatform implements OSPlatform
 	{
 		return Paths.get(Platform.getHome(), "Library", "Application Support", Application.instance().getName());
 	}
+
+	@Override
+	public String getTerminate()
+	{
+		return "Quit";
+	}
 }

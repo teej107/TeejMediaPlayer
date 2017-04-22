@@ -15,4 +15,10 @@ public class WindowsPlatform implements OSPlatform
 	{
 		return Paths.get(System.getenv("appdata"), Application.instance().getName());
 	}
+
+	@Override
+	public String getTerminate()
+	{
+		return "Exit";
+	}
 }

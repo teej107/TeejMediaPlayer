@@ -10,5 +10,7 @@
     <orderEntry type="library" name="sqlite-jdbc-3.16.1" level="project" />
     <orderEntry type="library" name="json_simple-1.1" level="project" />
     <orderEntry type="library" name="jfxrt" level="project" />
+    <orderEntry type="library" name="weblaf-complete-1.28" level="project" />
+    <orderEntry type="library" name="jaudiotagger-2.2.6-SNAPSHOT" level="project" />
   </component>
 </module>

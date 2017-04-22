@@ -81,6 +81,11 @@ public class ApplicationPreferences implements Runnable
 		return path == null ? Paths.get(Platform.getPlatform().getAppDataDirectory().toString(), "music") : Paths.get(path);
 	}
 
+/*	public void setMusicRootDirectory(Path path)
+	{
+		prefs.put(MUSIC_ROOT_DIR, path.toString());
+	}*/
+
 	/**
 	 * Shutdown hook
 	 */

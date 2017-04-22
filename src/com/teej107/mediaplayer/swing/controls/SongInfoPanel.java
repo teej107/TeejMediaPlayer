@@ -1,4 +1,4 @@
-package com.teej107.mediaplayer.swing.component;
+package com.teej107.mediaplayer.swing.controls;
 
 import com.teej107.mediaplayer.media.AudioPlayer;
 import com.teej107.mediaplayer.media.SongChangeListener;

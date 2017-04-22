@@ -16,4 +16,10 @@ public class LinuxPlatform implements OSPlatform
 	{
 		return Paths.get(Platform.getHome(), "." + Application.instance().getName());
 	}
+
+	@Override
+	public String getTerminate()
+	{
+		return "Exit";
+	}
 }

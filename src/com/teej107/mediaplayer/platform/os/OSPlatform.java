@@ -8,4 +8,5 @@ import java.nio.file.Path;
 public interface OSPlatform
 {
 	Path getAppDataDirectory();
+	String getTerminate();
 }

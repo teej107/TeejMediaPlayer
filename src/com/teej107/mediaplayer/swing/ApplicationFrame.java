@@ -28,6 +28,7 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 
+		setJMenuBar(new ApplicationMenu());
 		setContentPane(new ApplicationPanel());
 
 		setChildrenUnfocusable((JComponent) getContentPane());

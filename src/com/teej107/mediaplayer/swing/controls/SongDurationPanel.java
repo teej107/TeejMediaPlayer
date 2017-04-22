@@ -1,4 +1,4 @@
-package com.teej107.mediaplayer.swing.component;
+package com.teej107.mediaplayer.swing.controls;
 
 import com.teej107.mediaplayer.media.*;
 import com.teej107.mediaplayer.media.audio.ISong;
@@ -28,10 +28,18 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 		add(remainingTime, BorderLayout.LINE_END);
 	}
 
+	private static String formatNumber(int minutes, int seconds)
+	{
+		return (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+	}
+
 	@Override
 	public void onTimeChange(int currentSeconds)
 	{
 		durationSlider.setValue(currentSeconds);
+		currentTime.setText(formatNumber(currentSeconds / 60, currentSeconds % 60));
+		int timeLeft = durationSlider.getMaximum() - currentSeconds;
+		remainingTime.setText(formatNumber(timeLeft / 60, timeLeft % 60));
 	}
 
 	@Override

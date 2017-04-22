@@ -91,6 +91,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		return audioPlayer;
 	}
 
+	public DatabaseManager getDatabaseManager()
+	{
+		return databaseManager;
+	}
+
 	/**
 	 * Add a shutdown hook to run code when the application exits
 	 *

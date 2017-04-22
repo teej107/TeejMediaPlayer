@@ -1,4 +1,4 @@
-package com.teej107.mediaplayer.swing.component;
+package com.teej107.mediaplayer.swing.controls;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

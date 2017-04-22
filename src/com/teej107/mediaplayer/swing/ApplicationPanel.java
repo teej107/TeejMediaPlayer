@@ -1,7 +1,8 @@
 package com.teej107.mediaplayer.swing;
 
 import com.teej107.mediaplayer.Application;
-import com.teej107.mediaplayer.swing.component.MusicInfoControlPanel;
+import com.teej107.mediaplayer.swing.controls.MusicInfoControlPanel;
+import com.teej107.mediaplayer.swing.selection.SongTable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,17 @@ import java.awt.*;
 public class ApplicationPanel extends JPanel
 {
 	private JSplitPane splitPane;
+	private MusicInfoControlPanel musicInfoControlPanel;
+	private SongTable songTable;
 
 	public ApplicationPanel()
 	{
 		super(new BorderLayout());
+		this.musicInfoControlPanel = new MusicInfoControlPanel(Application.instance().getAudioPlayer());
+		this.songTable = new SongTable(Application.instance().getDatabaseManager());
+
 		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
-				new MusicInfoControlPanel(Application.instance().getAudioPlayer()), new JPanel());
+				musicInfoControlPanel, new JScrollPane(songTable));
 		add(splitPane, BorderLayout.CENTER);
 	}
 }
