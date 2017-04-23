@@ -6,7 +6,6 @@ import com.teej107.mediaplayer.util.Response;
 
 import javax.swing.*;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 /**
@@ -16,7 +15,7 @@ public class ApplicationPreferences implements Runnable
 {
 	private static final String WINDOW_STATE = "window-state";
 	private static final String PLAYER_STATE = "player-state";
-	private static final String MUSIC_ROOT_DIR = "music-root-directory";
+	private static final String SERVER_PORT = "server-port";
 
 	private Preferences prefs;
 	private WindowState windowState;
@@ -35,7 +34,7 @@ public class ApplicationPreferences implements Runnable
 		}
 
 		playerState = new PlayerState(getPlayerStateRawData());
-		Response playerResponce = playerState.load();
+		Response playerResponse = playerState.load();
 
 		application.addShutdownHook(this, Integer.MAX_VALUE);
 	}
@@ -75,21 +74,20 @@ public class ApplicationPreferences implements Runnable
 		return playerState;
 	}
 
-	public Path getMusicRootDirectory()
-	{
-		String path = prefs.get(MUSIC_ROOT_DIR, null);
-		return path == null ? Platform.getPlatform().getAppDataDirectory().resolve("music") : Paths.get(path);
-	}
-
 	public Path getServerRootDirectory()
 	{
 		return Platform.getPlatform().getAppDataDirectory().resolve("server");
 	}
 
-/*	public void setMusicRootDirectory(Path path)
+	public int getServerPort()
 	{
-		prefs.put(MUSIC_ROOT_DIR, path.toString());
-	}*/
+		return prefs.getInt(SERVER_PORT, 1410);
+	}
+
+	public void setServerPort(int port)
+	{
+		prefs.putInt(SERVER_PORT, port);
+	}
 
 	/**
 	 * Shutdown hook

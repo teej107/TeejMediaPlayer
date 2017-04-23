@@ -1,7 +1,7 @@
 /**
  * Created by tanner on 4/22/17.
  */
-var port = 3000;
+var port = getPort();
 
 var express = require('express');
 var app = express();

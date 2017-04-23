@@ -21,11 +21,6 @@ public class ApplicationMenu extends JMenuBar
 	{
 		this.fileChooser = new JFileChooser();
 		this.fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		Path directory = Application.instance().getApplicationPreferences().getMusicRootDirectory();
-		if (directory != null)
-		{
-			fileChooser.setCurrentDirectory(directory.toFile());
-		}
 
 		JMenu file = new JMenu("File");
 		file.add(new JMenuItem(new AbstractAction("Import Music")
@@ -36,19 +31,16 @@ public class ApplicationMenu extends JMenuBar
 				if (fileChooser.showDialog(SwingUtilities.getRootPane(ApplicationMenu.this), "Import") == JFileChooser.APPROVE_OPTION)
 				{
 					Path path = fileChooser.getSelectedFile().toPath();
-					if (directory != null && !path.equals(directory))
+					Application.instance().getDatabaseManager().purgeLibrary();
+					try
 					{
-						Application.instance().getDatabaseManager().purgeLibrary();
-						try
-						{
-							Files.walkFileTree(path, new AudioFileVisitor());
-							Application.instance().getDatabaseManager().commit();
-							//Application.instance().getApplicationPreferences().setMusicRootDirectory(path);
-						}
-						catch (IOException e1)
-						{
-							e1.printStackTrace();
-						}
+						Files.walkFileTree(path, new AudioFileVisitor());
+						Application.instance().getDatabaseManager().commit();
+						//Application.instance().getApplicationPreferences().setMusicRootDirectory(path);
+					}
+					catch (IOException e1)
+					{
+						e1.printStackTrace();
 					}
 				}
 			}
