@@ -5,8 +5,7 @@ import com.sun.istack.internal.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.nio.file.*;
 import java.util.Map;
 
@@ -22,8 +21,7 @@ public class NodeRuntime implements Runnable
 	public NodeRuntime(TeejMediaServer mediaServer, @Nullable Path root)
 	{
 		this.mediaServer = mediaServer;
-		this.nodeThread = new Thread(this);
-		if(root != null)
+		if (root != null)
 		{
 			copyNode(root);
 		}
@@ -49,17 +47,37 @@ public class NodeRuntime implements Runnable
 
 	public void start()
 	{
+		if(nodeThread == null)
+		{
+			nodeThread = new Thread(this);
+		}
 		nodeThread.start();
 	}
 
 	public void stop()
 	{
+		if(nodeThread == null)
+			return;
+
 		nodeThread.interrupt();
+		nodeThread = null;
+		try
+		{
+			URL url = new URL("http://localhost:" + mediaServer.getPort());
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+			connection.disconnect();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isRunning()
 	{
-		return !nodeThread.isInterrupted();
+		return nodeThread != null;
 	}
 
 	@Override
@@ -77,7 +95,6 @@ public class NodeRuntime implements Runnable
 			{
 				nodejs.getRuntime().registerJavaMethod(entry.getValue(), entry.getKey());
 			}
-
 			nodejs.exec(indexjs);
 			while (!Thread.currentThread().isInterrupted() && nodejs.isRunning())
 			{

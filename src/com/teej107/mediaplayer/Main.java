@@ -44,7 +44,6 @@ public class Main
 		{
 			showGUI(app);
 		}
-
 	}
 
 	private static void showGUI(Application app)

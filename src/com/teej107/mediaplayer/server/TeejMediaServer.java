@@ -1,6 +1,7 @@
 package com.teej107.mediaplayer.server;
 
-import com.eclipsesource.v8.*;
+import com.eclipsesource.v8.JavaCallback;
+import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 
 import java.util.*;
