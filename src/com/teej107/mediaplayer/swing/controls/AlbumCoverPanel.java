@@ -1,5 +1,9 @@
 package com.teej107.mediaplayer.swing.controls;
 
+import com.teej107.mediaplayer.media.AudioPlayer;
+import com.teej107.mediaplayer.media.SongChangeListener;
+import com.teej107.mediaplayer.media.audio.ISong;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,15 +14,18 @@ import java.io.IOException;
  * @author teej107
  * @since Apr 10, 2015
  */
-public class AlbumCoverPanel extends JPanel
+public class AlbumCoverPanel extends JPanel implements SongChangeListener
 {
 	private static final Image ICON;
 	private ImagePane cover;
 
-	public AlbumCoverPanel()
+	public AlbumCoverPanel(AudioPlayer audioPlayer)
 	{
 		super(new BorderLayout());
 		cover = new ImagePane(ICON);
+
+		audioPlayer.addSongChangeListener(this);
+
 		add(cover, BorderLayout.CENTER);
 	}
 
@@ -46,5 +53,11 @@ public class AlbumCoverPanel extends JPanel
 			e.printStackTrace();
 		}
 		ICON = (img == null ? new BufferedImage(0, 0, BufferedImage.TYPE_INT_RGB) : img);
+	}
+
+	@Override
+	public void onSongChange(ISong song)
+	{
+
 	}
 }

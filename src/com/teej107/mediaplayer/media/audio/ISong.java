@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.media.audio;
 
+import java.awt.*;
 import java.net.URI;
 
 /**
@@ -13,5 +14,6 @@ public interface ISong
 	String getAlbum();
 	int getYear();
 	long getDuration();
+	Image getArtwork();
 	URI getURI();
 }

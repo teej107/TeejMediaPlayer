@@ -23,7 +23,7 @@ public class MusicInfoControlPanel extends JPanel
 		this.controlsPanel = new JPanel(new BorderLayout());
 		this.infoPanel = new JPanel(new BorderLayout());
 		this.playbackControlPanel = new PlaybackControlPanel(audioPlayer);
-		this.albumCoverPanel = new AlbumCoverPanel();
+		this.albumCoverPanel = new AlbumCoverPanel(audioPlayer);
 		this.volumeControlPanel = new VolumeControlPanel(audioPlayer.getVolumeManager());
 		this.songInfoPanel = new SongInfoPanel(audioPlayer);
 		this.songDurationPanel = new SongDurationPanel(audioPlayer);

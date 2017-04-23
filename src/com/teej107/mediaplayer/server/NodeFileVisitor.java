@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class NodeFileVisitor extends SimpleFileVisitor<Path>
 {
 	private Path root;
+	private Path sourcePath;
 
 	public NodeFileVisitor(Path root)
 	{
@@ -25,17 +26,24 @@ public class NodeFileVisitor extends SimpleFileVisitor<Path>
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException
+	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
 	{
-		System.out.println(root.resolve(path));
-		if (Files.isDirectory(path))
+		if (sourcePath == null)
 		{
-			Files.createDirectories(root.resolve(path));
+			sourcePath = dir;
 		}
 		else
 		{
-			Files.copy(path, root.resolve(path), StandardCopyOption.REPLACE_EXISTING);
+			Files.createDirectories(root.resolve(sourcePath
+					.relativize(dir)));
 		}
+		return FileVisitResult.CONTINUE;
+	}
+
+	@Override
+	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+	{
+		Files.copy(file, root.resolve(sourcePath.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
 		return FileVisitResult.CONTINUE;
 	}
 }

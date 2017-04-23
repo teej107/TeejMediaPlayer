@@ -5,7 +5,6 @@ var port = 3000;
 
 var express = require('express');
 var app = express();
-console.log(app);
 app.listen(port, function () {
     console.log("listening on port", port);
 });

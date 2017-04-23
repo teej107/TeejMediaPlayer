@@ -28,12 +28,12 @@ public class ApplicationMenu extends JMenuBar
 		}
 
 		JMenu file = new JMenu("File");
-		file.add(new JMenuItem(new AbstractAction("Music Directory")
+		file.add(new JMenuItem(new AbstractAction("Import Music")
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if (fileChooser.showDialog(SwingUtilities.getRootPane(ApplicationMenu.this), "Set Here") == JFileChooser.APPROVE_OPTION)
+				if (fileChooser.showDialog(SwingUtilities.getRootPane(ApplicationMenu.this), "Import") == JFileChooser.APPROVE_OPTION)
 				{
 					Path path = fileChooser.getSelectedFile().toPath();
 					if (directory != null && !path.equals(directory))

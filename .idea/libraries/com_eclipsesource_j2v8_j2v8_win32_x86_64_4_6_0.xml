@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.eclipsesource.j2v8:j2v8_win32_x86_64:4.6.0" type="repository">
+    <properties maven-id="com.eclipsesource.j2v8:j2v8_win32_x86_64:4.6.0" />
+    <CLASSES>
+      <root url="jar://$JAVA_LIBRARIES$/j2v8_win32_x86_64-4.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$JAVA_LIBRARIES$/j2v8_win32_x86_64-4.6.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

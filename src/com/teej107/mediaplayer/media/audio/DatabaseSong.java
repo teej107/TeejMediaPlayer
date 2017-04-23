@@ -1,9 +1,15 @@
 package com.teej107.mediaplayer.media.audio;
 
 import com.teej107.mediaplayer.io.db.Row;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.images.Artwork;
 
+import java.awt.*;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Created by teej107 on 4/15/17.
@@ -51,6 +57,22 @@ public class DatabaseSong implements ISong
 	public long getDuration()
 	{
 		return row.getObject("duration", long.class);
+	}
+
+	@Override
+	public Image getArtwork()
+	{
+		try
+		{
+			AudioFile f = AudioFileIO.read(new File(getURI()));
+			List<Artwork> artwork = f.getTag().getArtworkList();
+			return null;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
