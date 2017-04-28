@@ -1,7 +1,6 @@
 package com.teej107.mediaplayer.server;
 
 import com.eclipsesource.v8.*;
-import com.sun.istack.internal.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,13 +17,14 @@ public class NodeRuntime implements Runnable
 	private Thread nodeThread;
 	private File indexjs;
 
-	public NodeRuntime(TeejMediaServer mediaServer, @Nullable Path root)
+	public NodeRuntime(TeejMediaServer mediaServer, Path root, boolean copy)
 	{
 		this.mediaServer = mediaServer;
-		if (root != null)
+		if (copy)
 		{
 			copyNode(root);
 		}
+		this.indexjs = new File(root.toFile(), "index.js");
 	}
 
 	private void copyNode(Path root)
@@ -33,7 +33,6 @@ public class NodeRuntime implements Runnable
 		{
 			URI uri = getClass().getResource("/com/teej107/mediaplayer/server/web").toURI();
 			Files.walkFileTree(Paths.get(uri), new NodeFileVisitor(root));
-			this.indexjs = new File(root.toFile(), "index.js");
 		}
 		catch (URISyntaxException e)
 		{
@@ -71,7 +70,7 @@ public class NodeRuntime implements Runnable
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 

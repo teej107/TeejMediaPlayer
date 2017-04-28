@@ -26,6 +26,9 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 		add(currentTime, BorderLayout.LINE_START);
 		add(durationSlider, BorderLayout.CENTER);
 		add(remainingTime, BorderLayout.LINE_END);
+
+		audioPlayer.addSongChangeListener(this);
+		audioPlayer.addTimeChangeListener(this);
 	}
 
 	private static String formatNumber(int minutes, int seconds)

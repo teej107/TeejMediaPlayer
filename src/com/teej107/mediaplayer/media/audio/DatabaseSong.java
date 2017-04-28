@@ -9,7 +9,6 @@ import java.awt.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * Created by teej107 on 4/15/17.
@@ -56,7 +55,7 @@ public class DatabaseSong implements ISong
 	@Override
 	public long getDuration()
 	{
-		return row.getObject("duration", long.class);
+		return row.getObject("duration_sec", Integer.class);
 	}
 
 	@Override
@@ -65,8 +64,8 @@ public class DatabaseSong implements ISong
 		try
 		{
 			AudioFile f = AudioFileIO.read(new File(getURI()));
-			List<Artwork> artwork = f.getTag().getArtworkList();
-			return null;
+			Artwork artwork = f.getTag().getFirstArtwork();
+			return artwork == null ? null : (Image) artwork.getImage();
 		}
 		catch (Exception e)
 		{

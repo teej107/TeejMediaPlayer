@@ -1,4 +1,4 @@
-package com.teej107.mediaplayer.swing.menu;
+package com.teej107.mediaplayer.swing.action;
 
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.AudioFileVisitor;

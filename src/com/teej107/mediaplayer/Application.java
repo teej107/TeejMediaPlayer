@@ -94,6 +94,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		return audioPlayer;
 	}
 
+	public ApplicationFrame getApplicationFrame()
+	{
+		return applicationFrame;
+	}
+
 	public TeejMediaServer getMediaServer()
 	{
 		return mediaServer;

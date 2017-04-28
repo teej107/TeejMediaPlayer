@@ -1,8 +1,7 @@
 package com.teej107.mediaplayer.swing;
 
-import com.teej107.mediaplayer.Application;
-import com.teej107.mediaplayer.platform.Platform;
-import com.teej107.mediaplayer.swing.menu.ImportMusicAction;
+import com.teej107.mediaplayer.swing.action.ExitAction;
+import com.teej107.mediaplayer.swing.action.ImportMusicAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,17 +13,38 @@ public class ApplicationMenu extends JMenuBar
 {
 	public ApplicationMenu()
 	{
-		JMenu file = new JMenu("File");
-		file.add(new JMenuItem(new ImportMusicAction()));
-		file.addSeparator();
-		file.add(new AbstractAction(Platform.getPlatform().getTerminate())
+		add(new JMenuChain("File")
+				.append(new ImportMusicAction())
+				.separator()
+				.append(new ExitAction()));
+		add(new JMenuChain("Edit")
+				.append(new AbstractAction("Server")
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						new ServerDialog().setVisible(true);
+					}
+				}));
+	}
+
+	class JMenuChain extends JMenu
+	{
+		public JMenuChain(String name)
 		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Application.instance().exit();
-			}
-		});
-		add(file);
+			super(name);
+		}
+
+		public JMenuChain append(Action action)
+		{
+			this.add(new JMenuItem(action));
+			return this;
+		}
+
+		public JMenuChain separator()
+		{
+			this.addSeparator();
+			return this;
+		}
 	}
 }

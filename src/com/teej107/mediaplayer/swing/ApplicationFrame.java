@@ -2,6 +2,8 @@ package com.teej107.mediaplayer.swing;
 
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.WindowState;
+import com.teej107.mediaplayer.platform.Platform;
+import com.teej107.mediaplayer.server.TeejMediaServer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +59,18 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
+		TeejMediaServer mediaServer = application.getMediaServer();
+		if (mediaServer.isRunning())
+		{
+			if (JOptionPane.showConfirmDialog(this, "The server is currently running. Do you want to kill the server?",
+					Platform.getPlatform().getTerminate() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
+			{
+				setExtendedState(JFrame.ICONIFIED);
+				return;
+			}
+		}
 		application.exit();
+
 	}
 
 	@Override
@@ -95,7 +108,7 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 	{
 		WindowState windowState = application.getApplicationPreferences().getWindowState();
 		windowState.setLocation(getLocation());
-		if(getExtendedState() == Frame.NORMAL)
+		if (getExtendedState() == Frame.NORMAL)
 		{
 			windowState.setWindowSize(getSize());
 		}

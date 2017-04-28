@@ -3,6 +3,7 @@ package com.teej107.mediaplayer.server;
 import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.io.ApplicationPreferences;
 
 import java.util.*;
 
@@ -12,21 +13,21 @@ import java.util.*;
 public class TeejMediaServer implements Runnable
 {
 	private NodeRuntime runtime;
-	private int port;
+	private ApplicationPreferences applicationPreferences;
 	private Map<String, JavaCallback> javaCallbacks;
 	private Map<String, JavaVoidCallback> javaVoidCallbacks;
 	private final Object collectionLock;
 
 	public TeejMediaServer(Application application)
 	{
-		this.runtime = new NodeRuntime(this, application.getApplicationPreferences().getServerRootDirectory());
-		this.port = application.getApplicationPreferences().getServerPort();
+		this.applicationPreferences = application.getApplicationPreferences();
+		this.runtime = new NodeRuntime(this, application.getApplicationPreferences().getServerRootDirectory(), false);
 		this.javaCallbacks = new HashMap<>();
 		this.javaVoidCallbacks = new HashMap<>();
 		this.collectionLock = new Object();
 		application.addShutdownHook(this, 1410);
 
-		addJavaCallback("getPort", (JavaCallback) (v8Object, v8Array) -> port);
+		addJavaCallback("getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 	}
 
 	public Object getLock()
@@ -57,7 +58,7 @@ public class TeejMediaServer implements Runnable
 
 	public int getPort()
 	{
-		return port;
+		return applicationPreferences.getServerPort();
 	}
 
 	public Collection<Map.Entry<String, JavaCallback>> getJavaCallbacks()

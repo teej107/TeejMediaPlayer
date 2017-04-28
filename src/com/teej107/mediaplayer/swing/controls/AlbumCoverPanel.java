@@ -24,9 +24,9 @@ public class AlbumCoverPanel extends JPanel implements SongChangeListener
 		super(new BorderLayout());
 		cover = new ImagePane(ICON);
 
-		audioPlayer.addSongChangeListener(this);
-
 		add(cover, BorderLayout.CENTER);
+
+		audioPlayer.addSongChangeListener(this);
 	}
 
 	public Image getImage()
@@ -58,6 +58,6 @@ public class AlbumCoverPanel extends JPanel implements SongChangeListener
 	@Override
 	public void onSongChange(ISong song)
 	{
-
+		setImage(song.getArtwork());
 	}
 }
