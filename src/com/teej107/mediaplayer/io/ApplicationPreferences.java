@@ -16,27 +16,36 @@ public class ApplicationPreferences implements Runnable
 	private static final String WINDOW_STATE = "window-state";
 	private static final String PLAYER_STATE = "player-state";
 	private static final String SERVER_PORT = "server-port";
+	private static final String API_STATE = "api-state";
 
 	private Preferences prefs;
 	private WindowState windowState;
 	private PlayerState playerState;
+	private ApiState apiState;
 
 	public ApplicationPreferences(Application application)
 	{
 		this.prefs = Preferences.userRoot().node(application.getName());
 
-		windowState = new WindowState(getWindowStateRawData());
-		Response windowResponse = windowState.load();
-		if (windowResponse.getStatus() == Response.ERROR)
-		{
-			System.out.println(windowResponse.getMessageAsString());
-			JOptionPane.showMessageDialog(null, windowResponse.getMessageAsString(), WINDOW_STATE, JOptionPane.ERROR_MESSAGE);
-		}
+		this.windowState = new WindowState(getWindowStateRawData());
+		displayIfError(windowState.load(), WINDOW_STATE);
 
-		playerState = new PlayerState(getPlayerStateRawData());
-		Response playerResponse = playerState.load();
+		this.playerState = new PlayerState(getPlayerStateRawData());
+		displayIfError(playerState.load(), PLAYER_STATE);
+
+		this.apiState = new ApiState(getApiStateRawData());
+		displayIfError(apiState.load(), API_STATE);
 
 		application.addShutdownHook(this, Integer.MAX_VALUE);
+	}
+
+	private void displayIfError(Response response, String title)
+	{
+		if(response.getStatus() == Response.ERROR)
+		{
+			System.err.println(response.getMessageAsString());
+			JOptionPane.showMessageDialog(null, response.getMessageAsString(), title, JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private String getWindowStateRawData()
@@ -59,6 +68,16 @@ public class ApplicationPreferences implements Runnable
 		prefs.put(PLAYER_STATE, rawData);
 	}
 
+	private String getApiStateRawData()
+	{
+		return prefs.get(API_STATE, null);
+	}
+
+	private void setApiStateRawData(String rawData)
+	{
+		prefs.put(API_STATE, rawData);
+	}
+
 	/**
 	 * Get the WindowState object
 	 *
@@ -74,9 +93,19 @@ public class ApplicationPreferences implements Runnable
 		return playerState;
 	}
 
+	public ApiState getApiState()
+	{
+		return apiState;
+	}
+
 	public Path getServerRootDirectory()
 	{
 		return Platform.getPlatform().getAppDataDirectory().resolve("server");
+	}
+
+	public Path getAlbumRootDirectory()
+	{
+		return Platform.getPlatform().getAppDataDirectory().resolve("Album Art");
 	}
 
 	public int getServerPort()
@@ -99,6 +128,7 @@ public class ApplicationPreferences implements Runnable
 		{
 			setWindowStateRawData(windowState.call());
 			setPlayerStateRawData(playerState.call());
+			setApiStateRawData(apiState.call());
 		}
 		catch (Exception e)
 		{

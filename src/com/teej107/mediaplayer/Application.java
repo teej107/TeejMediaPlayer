@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer;
 
+import com.teej107.mediaplayer.io.AlbumManager;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
 import com.teej107.mediaplayer.io.db.DatabaseManager;
 import com.teej107.mediaplayer.media.AudioPlayer;
@@ -13,7 +14,6 @@ import com.teej107.mediaplayer.util.SwingEDT;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -29,6 +29,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private VolumeManager volumeManager;
 	private AudioPlayer audioPlayer;
 	private TeejMediaServer mediaServer;
+	private AlbumManager albumManager;
 
 	private Application()
 	{
@@ -36,6 +37,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		this.applicationPreferences = new ApplicationPreferences(this);
 		this.volumeManager = new VolumeManager(applicationPreferences.getPlayerState().getVolume());
 		this.audioPlayer = new AudioPlayer(volumeManager);
+		this.albumManager = new AlbumManager(applicationPreferences);
 	}
 
 	protected Application init()
@@ -43,7 +45,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		try
 		{
 			Files.createDirectories(Platform.getPlatform().getAppDataDirectory());
-			this.databaseManager = new DatabaseManager(Paths.get(Platform.getPlatform().getAppDataDirectory().toString(), "storage.db"));
+			this.databaseManager = new DatabaseManager(Platform.getPlatform().getAppDataDirectory().resolve("storage.db"));
 			this.mediaServer = new TeejMediaServer(this);
 		}
 		catch (IOException e)
@@ -97,6 +99,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	public ApplicationFrame getApplicationFrame()
 	{
 		return applicationFrame;
+	}
+
+	public AlbumManager getAlbumManager()
+	{
+		return albumManager;
 	}
 
 	public TeejMediaServer getMediaServer()

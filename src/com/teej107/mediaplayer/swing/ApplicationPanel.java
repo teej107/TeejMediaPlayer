@@ -19,7 +19,8 @@ public class ApplicationPanel extends JPanel
 	public ApplicationPanel()
 	{
 		super(new BorderLayout());
-		this.musicInfoControlPanel = new MusicInfoControlPanel(Application.instance().getAudioPlayer());
+		this.musicInfoControlPanel = new MusicInfoControlPanel(Application.instance().getAudioPlayer(),
+				Application.instance().getAlbumManager());
 		this.songTable = new SongTable(Application.instance().getDatabaseManager());
 
 		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,

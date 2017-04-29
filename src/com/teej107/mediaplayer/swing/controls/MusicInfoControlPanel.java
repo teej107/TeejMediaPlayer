@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.swing.controls;
 
+import com.teej107.mediaplayer.io.AlbumManager;
 import com.teej107.mediaplayer.media.AudioPlayer;
 
 import javax.swing.*;
@@ -17,13 +18,13 @@ public class MusicInfoControlPanel extends JPanel
 	private SongDurationPanel songDurationPanel;
 	private SongInfoPanel songInfoPanel;
 
-	public MusicInfoControlPanel(AudioPlayer audioPlayer)
+	public MusicInfoControlPanel(AudioPlayer audioPlayer, AlbumManager albumManager)
 	{
 		super(new BorderLayout());
 		this.controlsPanel = new JPanel(new BorderLayout());
 		this.infoPanel = new JPanel(new BorderLayout());
 		this.playbackControlPanel = new PlaybackControlPanel(audioPlayer);
-		this.albumCoverPanel = new AlbumCoverPanel(audioPlayer);
+		this.albumCoverPanel = new AlbumCoverPanel(audioPlayer, albumManager);
 		this.volumeControlPanel = new VolumeControlPanel(audioPlayer.getVolumeManager());
 		this.songInfoPanel = new SongInfoPanel(audioPlayer);
 		this.songDurationPanel = new SongDurationPanel(audioPlayer);

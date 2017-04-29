@@ -10,9 +10,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-import javax.swing.*;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Created by teej107 on 4/15/2017.

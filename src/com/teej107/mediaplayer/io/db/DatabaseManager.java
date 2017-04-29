@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.io.db;
 
+import com.teej107.mediaplayer.io.AlbumManager;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -17,6 +18,7 @@ import java.util.*;
  */
 public class DatabaseManager
 {
+	private AlbumManager albumManager;
 	private Path path;
 	private Connection connection;
 	private PreparedStatement library, libraryCount, musicInfo, addToLibrary;
@@ -26,6 +28,7 @@ public class DatabaseManager
 	public DatabaseManager(Path path) throws IOException
 	{
 		this.path = path;
+		this.albumManager = albumManager;
 		this.commitListeners = new HashSet<>();
 		try
 		{
@@ -194,7 +197,6 @@ public class DatabaseManager
 		try
 		{
 			int count = getLibraryCount();
-			System.out.println("Library Count: " + count);
 			List<DatabaseSong> collection = new ArrayList<>(count);
 
 			ResultSet resultSet = library.executeQuery();

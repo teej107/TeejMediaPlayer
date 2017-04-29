@@ -1,10 +1,13 @@
 package com.teej107.mediaplayer.swing.action;
 
+import com.sun.javafx.application.PlatformImpl;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.AudioFileVisitor;
+import javafx.stage.DirectoryChooser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,33 +17,36 @@ import java.nio.file.Path;
  */
 public class ImportMusicAction extends AbstractAction
 {
-	private JFileChooser fileChooser;
+	private DirectoryChooser fileChooser;
 
 	public ImportMusicAction()
 	{
 		super("Import Music");
-		this.fileChooser = new JFileChooser();
-		this.fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		this.fileChooser = new DirectoryChooser();
+		this.fileChooser.setTitle((String) getValue(Action.NAME));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (fileChooser.showDialog(null, "Import") == JFileChooser.APPROVE_OPTION)
+		PlatformImpl.runLater(() ->
 		{
-			Path path = fileChooser.getSelectedFile().toPath();
+			File file = fileChooser.showDialog(null);
+			if (file == null)
+				return;
+
+			Path path = file.toPath();
 			Application.instance().getDatabaseManager().purgeLibrary();
 			try
 			{
 				Files.walkFileTree(path, new AudioFileVisitor());
 				Application.instance().getDatabaseManager().commit();
-				//Application.instance().getApplicationPreferences().setMusicRootDirectory(path);
 			}
 			catch (IOException e1)
 			{
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, e1.getMessage());
 			}
-		}
+		});
 	}
 }
