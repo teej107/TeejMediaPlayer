@@ -4,7 +4,15 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.media.audio.DatabaseSong;
+import com.teej107.mediaplayer.util.Version;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.*;
+import java.net.URI;
+import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -17,17 +25,87 @@ public class TeejMediaServer implements Runnable
 	private Map<String, JavaCallback> javaCallbacks;
 	private Map<String, JavaVoidCallback> javaVoidCallbacks;
 	private final Object collectionLock;
+	private Version embeddedVersion, installedVersion;
 
 	public TeejMediaServer(Application application)
 	{
 		this.applicationPreferences = application.getApplicationPreferences();
-		this.runtime = new NodeRuntime(this, application.getApplicationPreferences().getServerRootDirectory(), false);
+		this.runtime = new NodeRuntime(this, applicationPreferences.getServerRootDirectory(), false);
 		this.javaCallbacks = new HashMap<>();
 		this.javaVoidCallbacks = new HashMap<>();
 		this.collectionLock = new Object();
-		application.addShutdownHook(this, 1410);
+
+		readServerVersion();
 
 		addJavaCallback("getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
+		addJavaCallback("j_getFile", (JavaCallback) (v8Object, v8Array) ->
+		{
+			if (v8Array.length() > 0)
+			{
+				URI uri = Paths.get(v8Array.getString(0)).toUri();
+				DatabaseSong song = application.getDatabaseManager().getSongByURI(uri);
+				if (song != null)
+					return new File(uri).getAbsolutePath();
+			}
+			return null;
+		});
+
+		application.addShutdownHook(this, 1410);
+	}
+
+	private void readServerVersion()
+	{
+		try
+		{
+			JSONParser parser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) parser.parse(
+					new InputStreamReader(getClass().getResourceAsStream("/com/teej107/mediaplayer/server/web/package.json")));
+			embeddedVersion = new Version((String) jsonObject.get("version"));
+			Path packagejson = applicationPreferences.getServerRootDirectory().resolve("package.json");
+			if (runtime.exists() && Files.exists(packagejson))
+			{
+				jsonObject = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(packagejson)));
+				installedVersion = new Version((String) jsonObject.get("version"));
+			}
+			else
+			{
+				installedVersion = new Version();
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isInstalled()
+	{
+		return runtime.exists() && embeddedVersion.equals(installedVersion);
+	}
+
+	public void install()
+	{
+		runtime.copyNode();
+		readServerVersion();
+	}
+
+	public boolean isInstalling()
+	{
+		return runtime.isCopying();
+	}
+
+	public Version getEmbeddedVersion()
+	{
+		return embeddedVersion;
+	}
+
+	public Version getInstalledVersion()
+	{
+		return installedVersion;
 	}
 
 	public Object getLock()

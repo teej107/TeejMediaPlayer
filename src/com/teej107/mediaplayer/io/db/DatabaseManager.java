@@ -21,7 +21,7 @@ public class DatabaseManager
 	private AlbumManager albumManager;
 	private Path path;
 	private Connection connection;
-	private PreparedStatement library, libraryCount, musicInfo, addToLibrary;
+	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI;
 	private int version;
 	private Collection<CommitListener> commitListeners;
 
@@ -65,6 +65,7 @@ public class DatabaseManager
 			libraryCount = connection.prepareStatement(readSql(version, "get-library-count"));
 			musicInfo = connection.prepareStatement(readSql(version, "get-music-info"));
 			addToLibrary = connection.prepareStatement(readSql(version, "add-to-library"));
+			songByURI = connection.prepareStatement(readSql(version, "get-song-by-uri"));
 		}
 		catch (URISyntaxException | IOException e)
 		{
@@ -192,6 +193,28 @@ public class DatabaseManager
 		}
 	}
 
+	public DatabaseSong getSongByURI(URI uri)
+	{
+		try
+		{
+			songByURI.setString(1, uri.toString());
+			ResultSet resultSet = songByURI.executeQuery();
+			songByURI.clearParameters();
+			DatabaseSong song = null;
+			while(resultSet.next())
+			{
+				song = new DatabaseSong(new Row(resultSet));
+			}
+			resultSet.close();
+			return song;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public List<DatabaseSong> getLibrary()
 	{
 		try
@@ -204,6 +227,7 @@ public class DatabaseManager
 			{
 				collection.add(new DatabaseSong(new Row(resultSet)));
 			}
+			resultSet.close();
 			return collection;
 		}
 		catch (SQLException e)

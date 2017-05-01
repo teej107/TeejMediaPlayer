@@ -1,6 +1,10 @@
 package com.teej107.mediaplayer.server;
 
 import com.eclipsesource.v8.*;
+import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.io.CounterFileVisitor;
+import com.teej107.mediaplayer.swing.ApplicationStatusBar;
+import com.teej107.mediaplayer.util.SwingEDT;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,24 +19,41 @@ public class NodeRuntime implements Runnable
 {
 	private TeejMediaServer mediaServer;
 	private Thread nodeThread;
+	private Path root;
 	private File indexjs;
+	private volatile boolean isCopying;
 
 	public NodeRuntime(TeejMediaServer mediaServer, Path root, boolean copy)
 	{
 		this.mediaServer = mediaServer;
+		this.root = root;
+		this.isCopying = false;
 		if (copy)
 		{
-			copyNode(root);
+			copyNode();
 		}
 		this.indexjs = new File(root.toFile(), "index.js");
 	}
 
-	private void copyNode(Path root)
+	public void copyNode()
 	{
+		isCopying = true;
 		try
 		{
 			URI uri = getClass().getResource("/com/teej107/mediaplayer/server/web").toURI();
-			Files.walkFileTree(Paths.get(uri), new NodeFileVisitor(root));
+			Path path = Paths.get(uri);
+			CounterFileVisitor counterFileVisitor = new CounterFileVisitor().walk(path);
+			ApplicationStatusBar statusBar = Application.instance().getApplicationFrame().getApplicationStatusBar();
+			SwingEDT.invoke(() ->
+			{
+				statusBar.getProgressBar().setMaximum(counterFileVisitor.getCount());
+				statusBar.getProgressBar().setValue(0);
+				statusBar.getProgressLabel().setText("Installing Server...");
+				statusBar.setProgressVisible(true);
+			});
+			Files.walkFileTree(path,
+					new NodeFileVisitor(root, (progress) -> SwingEDT.invoke(() -> statusBar.getProgressBar().setValue(progress))));
+			SwingEDT.invoke(() -> statusBar.setProgressVisible(false));
 		}
 		catch (URISyntaxException e)
 		{
@@ -42,11 +63,25 @@ public class NodeRuntime implements Runnable
 		{
 			e.printStackTrace();
 		}
+		isCopying = false;
+	}
+
+	public boolean isCopying()
+	{
+		return isCopying;
+	}
+
+	public boolean exists()
+	{
+		return indexjs.exists();
 	}
 
 	public void start()
 	{
-		if(nodeThread == null)
+		if (!exists())
+			return;
+
+		if (nodeThread == null)
 		{
 			nodeThread = new Thread(this);
 		}
@@ -55,7 +90,7 @@ public class NodeRuntime implements Runnable
 
 	public void stop()
 	{
-		if(nodeThread == null)
+		if (nodeThread == null)
 			return;
 
 		nodeThread.interrupt();

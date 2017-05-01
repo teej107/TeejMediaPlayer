@@ -5,6 +5,8 @@ var port = getPort();
 
 var express = require('express');
 var app = express();
+var storage = require('./storage');
+
 app.listen(port, function ()
 {
     console.log("listening on port", port);
@@ -12,13 +14,23 @@ app.listen(port, function ()
 
 app.use(express.static(__dirname +  '/build'));
 
-app.get('/media', function (req, res)
+function varargParams(initPath)
 {
-    res.send("Teej Media Player");
+    return /^\// + initPath + /\/(.*)/;
+}
+
+app.get(varargParams('media'), function (req, res)
+{
+    var from = req.params[0];
+    var song = storage.getSong(from);
+    if(song)
+    {
+        res.sendFile(song, {root: ''});
+    }
+    else
+    {
+        res.status(404).send(from + " not found");
+    }
 });
 
-/*
-app.get('*', (req, res) =>
-{
-    res.sendFile('/public/index.html');
-});*/
+

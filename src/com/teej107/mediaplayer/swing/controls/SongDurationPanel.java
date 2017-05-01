@@ -4,12 +4,14 @@ import com.teej107.mediaplayer.media.*;
 import com.teej107.mediaplayer.media.audio.ISong;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
  * Created by teej107 on 4/20/17.
  */
-public class SongDurationPanel extends JPanel implements TimeChangeListener, SongChangeListener
+public class SongDurationPanel extends JPanel implements TimeChangeListener, SongChangeListener, ChangeListener
 {
 	private AudioPlayer audioPlayer;
 	private JLabel currentTime, remainingTime;
@@ -22,6 +24,7 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 		this.currentTime = new JLabel("0:00");
 		this.remainingTime = new JLabel("0:00");
 		this.durationSlider = new JSlider(0, 0);
+		this.durationSlider.addChangeListener(this);
 
 		add(currentTime, BorderLayout.LINE_START);
 		add(durationSlider, BorderLayout.CENTER);
@@ -39,6 +42,7 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 	@Override
 	public void onTimeChange(int currentSeconds)
 	{
+		System.out.println(currentSeconds);
 		durationSlider.setValue(currentSeconds);
 		currentTime.setText(formatNumber(currentSeconds / 60, currentSeconds % 60));
 		int timeLeft = durationSlider.getMaximum() - currentSeconds;
@@ -50,5 +54,14 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 	{
 		durationSlider.setValue(0);
 		durationSlider.setMaximum((int) song.getDuration());
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e)
+	{
+		if(durationSlider.getValueIsAdjusting())
+		{
+			audioPlayer.seek(durationSlider.getValue());
+		}
 	}
 }

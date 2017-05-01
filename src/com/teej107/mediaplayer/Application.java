@@ -15,6 +15,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A singleton style class used for managing application wide objects
@@ -30,6 +32,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private AudioPlayer audioPlayer;
 	private TeejMediaServer mediaServer;
 	private AlbumManager albumManager;
+	private ExecutorService threadService;
 
 	private Application()
 	{
@@ -38,6 +41,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 		this.volumeManager = new VolumeManager(applicationPreferences.getPlayerState().getVolume());
 		this.audioPlayer = new AudioPlayer(volumeManager);
 		this.albumManager = new AlbumManager(applicationPreferences);
+		this.threadService = Executors.newCachedThreadPool();
 	}
 
 	protected Application init()
@@ -114,6 +118,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	public DatabaseManager getDatabaseManager()
 	{
 		return databaseManager;
+	}
+
+	public ExecutorService getThreadService()
+	{
+		return threadService;
 	}
 
 	/**

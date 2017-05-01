@@ -1,5 +1,7 @@
 package com.teej107.mediaplayer.server;
 
+import com.teej107.mediaplayer.util.ProgressListener;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -11,10 +13,13 @@ public class NodeFileVisitor extends SimpleFileVisitor<Path>
 {
 	private Path root;
 	private Path sourcePath;
+	private ProgressListener listener;
+	private int progress;
 
-	public NodeFileVisitor(Path root)
+	public NodeFileVisitor(Path root, ProgressListener listener)
 	{
 		this.root = root;
+		this.listener = listener;
 		try
 		{
 			Files.createDirectories(root);
@@ -44,6 +49,7 @@ public class NodeFileVisitor extends SimpleFileVisitor<Path>
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 	{
 		Files.copy(file, root.resolve(sourcePath.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
+		listener.onProgressChange(++progress);
 		return FileVisitResult.CONTINUE;
 	}
 }

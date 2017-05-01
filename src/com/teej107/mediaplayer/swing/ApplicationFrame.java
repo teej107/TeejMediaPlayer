@@ -16,6 +16,7 @@ import java.awt.event.WindowListener;
 public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 {
 	private Application application;
+	private ApplicationPanel applicationPanel;
 
 	public ApplicationFrame(Application application)
 	{
@@ -31,11 +32,18 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 		addWindowListener(this);
 
 		setJMenuBar(new ApplicationMenu());
-		setContentPane(new ApplicationPanel());
+
+		this.applicationPanel = new ApplicationPanel();
+		setContentPane(applicationPanel);
 
 		setChildrenUnfocusable((JComponent) getContentPane());
 
 		application.addShutdownHook(this, Integer.MAX_VALUE - 1);
+	}
+
+	public ApplicationStatusBar getApplicationStatusBar()
+	{
+		return applicationPanel.getStatusBar();
 	}
 
 	private void setChildrenUnfocusable(JComponent component)

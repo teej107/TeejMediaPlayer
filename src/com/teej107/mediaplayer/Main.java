@@ -48,10 +48,7 @@ public class Main
 
 	private static void showGUI(Application app)
 	{
-		if(!setLookAndFeel("com.alee.laf.WebLookAndFeel"))
-		{
-			setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
+		setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		PlatformImpl.startup(() -> {});
 		app.createGui();
 	}

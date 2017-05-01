@@ -11,23 +11,28 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by teej107 on 4/15/2017.
  */
-public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListener
+public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListener, Runnable
 {
 	private VolumeManager volumeManager;
 	private MediaPlayer mediaPlayer;
 	private ISong currentSong;
 	private Collection<TimeChangeListener> timeChangeListeners;
 	private Collection<SongChangeListener> songChangeListeners;
+	private Collection<EndOfMediaListener> endOfMediaListeners;
+	private Collection<SongPlaybackListener> songPlaybackListeners;
 
 	public AudioPlayer(VolumeManager volumeManager)
 	{
 		this.volumeManager = volumeManager;
 		this.timeChangeListeners = new HashSet<>();
 		this.songChangeListeners = new HashSet<>();
+		this.endOfMediaListeners = new HashSet<>();
+		this.songPlaybackListeners = new HashSet<>();
 	}
 
 	public void setSong(final ISong song)
@@ -36,6 +41,7 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		this.mediaPlayer = new MediaPlayer(new Media(song.getURI().toString()));
 		this.mediaPlayer.setVolume(volumeManager.getVolume());
 		this.mediaPlayer.currentTimeProperty().addListener(this);
+		this.mediaPlayer.setOnEndOfMedia(this);
 		volumeManager.addVolumeChangeListener(this);
 		this.currentSong = song;
 
@@ -46,6 +52,14 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 				listener.onSongChange(song);
 			}
 		});
+	}
+
+	public void seek(int seconds)
+	{
+		if(mediaPlayer != null)
+		{
+			mediaPlayer.seek(new Duration(TimeUnit.SECONDS.toMillis(seconds)));
+		}
 	}
 
 	public VolumeManager getVolumeManager()
@@ -68,6 +82,10 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		if (mediaPlayer != null && !isPlaying())
 		{
 			mediaPlayer.play();
+			for(SongPlaybackListener listener : songPlaybackListeners)
+			{
+				listener.onPlay();
+			}
 		}
 	}
 
@@ -76,6 +94,10 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		if (mediaPlayer != null && isPlaying())
 		{
 			mediaPlayer.pause();
+			for(SongPlaybackListener listener : songPlaybackListeners)
+			{
+				listener.onPause();
+			}
 		}
 	}
 
@@ -86,6 +108,10 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 			mediaPlayer.dispose();
 			mediaPlayer = null;
 			currentSong = null;
+			for(SongPlaybackListener listener : songPlaybackListeners)
+			{
+				listener.onStop();
+			}
 		}
 	}
 
@@ -97,6 +123,16 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 	public boolean addSongChangeListener(SongChangeListener listener)
 	{
 		return songChangeListeners.add(listener);
+	}
+
+	public boolean addEndOfMediaListener(EndOfMediaListener listener)
+	{
+		return endOfMediaListeners.add(listener);
+	}
+
+	public boolean addSongPlaybackListener(SongPlaybackListener listener)
+	{
+		return songPlaybackListeners.add(listener);
 	}
 
 	@Override
@@ -119,6 +155,15 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		if (mediaPlayer != null)
 		{
 			mediaPlayer.setVolume(volume);
+		}
+	}
+
+	@Override
+	public void run()
+	{
+		for(EndOfMediaListener listener : endOfMediaListeners)
+		{
+			listener.onEndOfMedia();
 		}
 	}
 }

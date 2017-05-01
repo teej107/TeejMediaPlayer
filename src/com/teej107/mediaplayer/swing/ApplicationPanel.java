@@ -15,6 +15,7 @@ public class ApplicationPanel extends JPanel
 	private JSplitPane splitPane;
 	private MusicInfoControlPanel musicInfoControlPanel;
 	private SongTable songTable;
+	private ApplicationStatusBar statusBar;
 
 	public ApplicationPanel()
 	{
@@ -26,5 +27,13 @@ public class ApplicationPanel extends JPanel
 		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
 				musicInfoControlPanel, new JScrollPane(songTable));
 		add(splitPane, BorderLayout.CENTER);
+
+		this.statusBar = new ApplicationStatusBar();
+		add(statusBar, BorderLayout.PAGE_END);
+	}
+
+	public ApplicationStatusBar getStatusBar()
+	{
+		return statusBar;
 	}
 }

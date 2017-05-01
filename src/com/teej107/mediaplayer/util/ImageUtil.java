@@ -1,7 +1,11 @@
 package com.teej107.mediaplayer.util;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * @author teej107
@@ -9,6 +13,20 @@ import java.awt.image.BufferedImage;
  */
 public class ImageUtil
 {
+	private static BufferedImage flip(BufferedImage image, double h, double v)
+	{
+		AffineTransform tx = AffineTransform.getScaleInstance(h, v);
+		tx.translate(h * image.getWidth(), v * image.getHeight() - image.getHeight());
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		image = op.filter(image, null);
+		return image;
+	}
+
+	public static BufferedImage flip(Image image, double h, double v)
+	{
+		return flip(toBufferedImage(image), h, v);
+	}
+
 	public static Image getScaledInstance(Image img, int targetWidth,
 			int targetHeight,
 			Object hint, boolean higherQuality)
@@ -103,4 +121,18 @@ public class ImageUtil
 		g2d.dispose();
 		return bufferedImage;
 	}
+
+	public static Image loadImageResource(String asset, Dimension preferredDimension) throws IOException
+	{
+		Image image = ImageIO.read(ImageUtil.class.getResource(asset));
+		if (preferredDimension.width > 0 && preferredDimension.height > 0)
+			return resize(image, preferredDimension.width, preferredDimension.height);
+		else if (preferredDimension.width == 0 && preferredDimension.height > 0)
+			return ratioHeight(image, preferredDimension.height);
+		else if (preferredDimension.height == 0 && preferredDimension.width > 0)
+			return ratioWidth(image, preferredDimension.width);
+
+		throw new IllegalArgumentException(preferredDimension.toString());
+	}
+
 }

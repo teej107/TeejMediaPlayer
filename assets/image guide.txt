@@ -1,0 +1,10 @@
+Default Blue = #0080ed
+Active Blue = #006ac4
+
+Square images = 2160 x 2160
+Layers must be close edge to edge
+
+Square pressed images layers = 2000 x 2000
+
+Unpressed borders are 200 px
+Pressed borders are 300px
