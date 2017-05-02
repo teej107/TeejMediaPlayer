@@ -101,6 +101,7 @@ public class NodeRuntime implements Runnable
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.connect();
+			connection.setConnectTimeout(1);
 			connection.disconnect();
 		}
 		catch (IOException e)

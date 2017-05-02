@@ -1,10 +1,9 @@
 package com.teej107.mediaplayer.swing;
 
-import com.teej107.mediaplayer.swing.action.ExitAction;
-import com.teej107.mediaplayer.swing.action.ImportMusicAction;
+import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.swing.action.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 /**
  * Created by teej107 on 4/21/2017.
@@ -18,14 +17,7 @@ public class ApplicationMenu extends JMenuBar
 				.separator()
 				.append(new ExitAction()));
 		add(new JMenuChain("Edit")
-				.append(new AbstractAction("Server")
-				{
-					@Override
-					public void actionPerformed(ActionEvent e)
-					{
-						new ServerDialog().setVisible(true);
-					}
-				}));
+				.append(new ShowServerDialogAction(Application.instance())));
 	}
 
 	class JMenuChain extends JMenu

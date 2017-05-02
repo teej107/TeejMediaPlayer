@@ -8,6 +8,7 @@ import com.teej107.mediaplayer.media.volume.VolumeManager;
 import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.server.TeejMediaServer;
 import com.teej107.mediaplayer.swing.ApplicationFrame;
+import com.teej107.mediaplayer.swing.ServerDialog;
 import com.teej107.mediaplayer.util.ComparableObject;
 import com.teej107.mediaplayer.util.SwingEDT;
 
@@ -27,6 +28,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private SortedSet<ComparableObject<Runnable>> shutdownHooks;
 	private ApplicationPreferences applicationPreferences;
 	private ApplicationFrame applicationFrame;
+	private ServerDialog serverDialog;
 	private DatabaseManager databaseManager;
 	private VolumeManager volumeManager;
 	private AudioPlayer audioPlayer;
@@ -123,6 +125,15 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	public ExecutorService getThreadService()
 	{
 		return threadService;
+	}
+
+	public ServerDialog getServerDialog()
+	{
+		if(serverDialog == null)
+		{
+			this.serverDialog = new ServerDialog(this);
+		}
+		return serverDialog;
 	}
 
 	/**

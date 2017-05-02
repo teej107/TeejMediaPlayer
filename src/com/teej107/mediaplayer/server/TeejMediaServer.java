@@ -26,6 +26,7 @@ public class TeejMediaServer implements Runnable
 	private Map<String, JavaVoidCallback> javaVoidCallbacks;
 	private final Object collectionLock;
 	private Version embeddedVersion, installedVersion;
+	private Collection<ServerStateListener> serverStateListeners;
 
 	public TeejMediaServer(Application application)
 	{
@@ -34,6 +35,7 @@ public class TeejMediaServer implements Runnable
 		this.javaCallbacks = new HashMap<>();
 		this.javaVoidCallbacks = new HashMap<>();
 		this.collectionLock = new Object();
+		this.serverStateListeners = new HashSet<>();
 
 		readServerVersion();
 
@@ -89,8 +91,16 @@ public class TeejMediaServer implements Runnable
 
 	public void install()
 	{
+		for(ServerStateListener listener : serverStateListeners)
+		{
+			listener.onInstalling();
+		}
 		runtime.copyNode();
 		readServerVersion();
+		for(ServerStateListener listener : serverStateListeners)
+		{
+			listener.onInstalled();
+		}
 	}
 
 	public boolean isInstalling()
@@ -116,16 +126,29 @@ public class TeejMediaServer implements Runnable
 	public void start()
 	{
 		runtime.start();
+		for(ServerStateListener listener : serverStateListeners)
+		{
+			listener.onStart();
+		}
 	}
 
 	public void stop()
 	{
 		runtime.stop();
+		for(ServerStateListener listener : serverStateListeners)
+		{
+			listener.onStop();
+		}
 	}
 
 	public boolean isRunning()
 	{
 		return runtime.isRunning();
+	}
+
+	public boolean addServerStateListener(ServerStateListener listener)
+	{
+		return serverStateListeners.add(listener);
 	}
 
 	@Override

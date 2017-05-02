@@ -52,10 +52,10 @@ public class ServerPanel extends JPanel implements MouseListener
 		layout.putConstraint(SpringLayout.WEST, install, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.NORTH, install, 10, SpringLayout.SOUTH, embeddedVersion);
 		layout.putConstraint(SpringLayout.EAST, install, 100, SpringLayout.WEST, install);
-		install.addMouseListener(new InstallServerMouseListener(this, mediaServer, service));
+		install.addMouseListener(new InstallServerMouseListener(install,this, mediaServer, service));
 		add(install);
 
-		this.startServer = new JButton(new ServerToggleAction());
+		this.startServer = new JButton(new ServerToggleAction(applicationPreferences ,mediaServer, serverPort.getTextField()));
 		layout.putConstraint(SpringLayout.WEST, startServer, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.SOUTH, startServer, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, startServer, 100, SpringLayout.WEST, startServer);

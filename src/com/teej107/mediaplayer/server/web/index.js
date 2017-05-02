@@ -7,12 +7,12 @@ var express = require('express');
 var app = express();
 var storage = require('./storage');
 
-app.listen(port, function ()
+var server = app.listen(port, function ()
 {
     console.log("listening on port", port);
 });
 
-app.use(express.static(__dirname +  '/build'));
+app.use(express.static(__dirname + '/build'));
 
 function varargParams(initPath)
 {
@@ -23,7 +23,7 @@ app.get(varargParams('media'), function (req, res)
 {
     var from = req.params[0];
     var song = storage.getSong(from);
-    if(song)
+    if (song)
     {
         res.sendFile(song, {root: ''});
     }

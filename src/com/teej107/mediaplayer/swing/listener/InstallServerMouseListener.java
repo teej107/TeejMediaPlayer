@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.swing.listener;
 
+import com.teej107.mediaplayer.server.ServerStateListener;
 import com.teej107.mediaplayer.server.TeejMediaServer;
 import com.teej107.mediaplayer.swing.ServerPanel;
 import com.teej107.mediaplayer.util.SwingEDT;
@@ -12,29 +13,29 @@ import java.util.concurrent.ExecutorService;
 /**
  * Created by teej107 on 4/30/2017.
  */
-public class InstallServerMouseListener implements MouseListener
+public class InstallServerMouseListener implements MouseListener, ServerStateListener
 {
+	private AbstractButton abstractButton;
 	private ExecutorService service;
 	private ServerPanel serverPanel;
 	private TeejMediaServer mediaServer;
 
-	public InstallServerMouseListener(ServerPanel serverPanel, TeejMediaServer mediaServer, ExecutorService service)
+	public InstallServerMouseListener(AbstractButton abstractButton, ServerPanel serverPanel, TeejMediaServer mediaServer,
+			ExecutorService service)
 	{
+		this.abstractButton = abstractButton;
 		this.mediaServer = mediaServer;
 		this.serverPanel = serverPanel;
 		this.service = service;
+		mediaServer.addServerStateListener(this);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		if (((JComponent) e.getSource()).isEnabled())
+		if (abstractButton.isEnabled() && (!mediaServer.isInstalling() && !mediaServer.isInstalled()))
 		{
-			if(!mediaServer.isInstalling() && !mediaServer.isInstalled())
-			{
-				service.submit(() -> mediaServer.install());
-			}
-			SwingEDT.invoke(() -> serverPanel.update());
+			service.submit(() -> mediaServer.install());
 		}
 	}
 
@@ -60,5 +61,33 @@ public class InstallServerMouseListener implements MouseListener
 	public void mouseExited(MouseEvent e)
 	{
 
+	}
+
+	@Override
+	public void onStart()
+	{
+
+	}
+
+	@Override
+	public void onStop()
+	{
+
+	}
+
+	@Override
+	public void onInstalling()
+	{
+		SwingEDT.invoke(() -> abstractButton.setText("Installing..."));
+	}
+
+	@Override
+	public void onInstalled()
+	{
+		SwingEDT.invoke(() ->
+		{
+			abstractButton.setText("Install");
+			serverPanel.update();
+		});
 	}
 }
