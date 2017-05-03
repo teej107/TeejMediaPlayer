@@ -8,21 +8,38 @@ import java.awt.*;
  */
 public class ApplicationStatusBar extends JPanel
 {
+	private SpringLayout layout;
 	private JProgressBar progressBar;
 	private JLabel progressLabel;
 
 	public ApplicationStatusBar()
 	{
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.layout = new SpringLayout();
+		setLayout(layout);
 		setMaximumSize(new Dimension(10, 18));
+		setPreferredSize(getMaximumSize());
 		this.progressBar = new JProgressBar();
 		this.progressLabel = new JLabel();
 		this.progressBar.setVisible(false);
-		this.progressBar.setMaximumSize(new Dimension(120, getMaximumSize().height));
 		this.progressLabel.setVisible(false);
+
+		layout.putConstraint(SpringLayout.WEST, progressBar, 0, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.EAST, progressBar, 120, SpringLayout.WEST, progressBar);
+		layout.putConstraint(SpringLayout.WEST, progressLabel, 5, SpringLayout.EAST, progressBar);
+
+		for(Component c : getComponents())
+		{
+			height(c);
+		}
+
 		add(progressBar);
-		add(Box.createRigidArea(new Dimension(5, 0)));
 		add(progressLabel);
+	}
+
+	private void height(Component component)
+	{
+		layout.putConstraint(SpringLayout.NORTH, component, 0, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, component, 0, SpringLayout.SOUTH, this);
 	}
 
 	public void setProgressVisible(boolean visible)

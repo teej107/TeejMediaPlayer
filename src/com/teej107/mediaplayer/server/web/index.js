@@ -1,16 +1,17 @@
 /**
  * Created by tanner on 4/22/17.
  */
-var port = getPort();
+const port = j_getPort();
+const shutdownKey = j_shutdownKey();
 
-var express = require('express');
-var app = express();
-var storage = require('./storage');
+const express = require('express');
+const app = express();
+const apiController = require('./apiController');
 
-var server = app.listen(port, function ()
+const server = app.listen(port, function ()
 {
     console.log("listening on port", port);
-    console.log("Shutdown Key:", j_shutdownKey());
+    console.log("Shutdown Key:", shutdownKey);
 });
 
 app.use(express.static(__dirname + '/build'));
@@ -20,27 +21,25 @@ function varargParams(initPath)
     return /^\// + initPath + /\/(.*)/;
 }
 
-app.get('/' + j_shutdownKey(), function (req, res)
+/**
+ * Should only be used by application to gracefully stop node.
+ */
+app.get('/' + shutdownKey, function (req, res)
 {
-    res.status(200).send();
+    var close = 'closing server...';
+    res.status(200).send(close);
+    console.log(close);
     server.close(function ()
     {
-        console.log("server closed");
+        console.log('server closed');
     });
 });
 
-app.get(varargParams('media'), function (req, res)
+app.get("/test/:id", apiController.getSongFile);
+
+app.get('/sanity', function (req, res)
 {
-    var from = req.params[0];
-    var song = storage.getSong(from);
-    if (song)
-    {
-        res.sendFile(song, {root: ''});
-    }
-    else
-    {
-        res.status(404).send(from + " not found");
-    }
+   res.send("Yup it works!")
 });
 
 

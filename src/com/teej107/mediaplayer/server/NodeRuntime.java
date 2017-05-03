@@ -19,7 +19,7 @@ import java.util.Map;
 public class NodeRuntime implements Runnable
 {
 	private TeejMediaServer mediaServer;
-	private Thread nodeThread;
+	private volatile Thread nodeThread;
 	private Path root;
 	private File indexjs;
 	private volatile boolean isCopying, stopping;
@@ -158,6 +158,11 @@ public class NodeRuntime implements Runnable
 			nodejs.release();
 			System.out.println("Node server released");
 			shutdownKey = null;
+			if (nodeThread != null)
+			{
+				nodeThread = null;
+				mediaServer.fireOnStop();
+			}
 		}
 	}
 }

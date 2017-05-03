@@ -5,6 +5,7 @@ import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
+import com.teej107.mediaplayer.util.SwingEDT;
 import com.teej107.mediaplayer.util.Version;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,7 +40,7 @@ public class TeejMediaServer implements Runnable
 
 		readServerVersion();
 
-		addJavaCallback("getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
+		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 		addJavaCallback("j_getFile", (JavaCallback) (v8Object, v8Array) ->
 		{
 			if (v8Array.length() > 0)
@@ -90,7 +91,8 @@ public class TeejMediaServer implements Runnable
 
 	public boolean isInstalled()
 	{
-		return runtime.exists() && embeddedVersion.equals(installedVersion);
+		//TODO: Don't forget to uncomment
+		return false/*runtime.exists() && embeddedVersion.equals(installedVersion)*/;
 	}
 
 	public boolean install()
@@ -141,14 +143,19 @@ public class TeejMediaServer implements Runnable
 		}
 	}
 
+	protected void fireOnStop()
+	{
+		for (ServerStateListener listener : serverStateListeners)
+		{
+			listener.onStop();
+		}
+	}
+
 	public void stop()
 	{
 		if (runtime.stop())
 		{
-			for (ServerStateListener listener : serverStateListeners)
-			{
-				listener.onStop();
-			}
+			fireOnStop();
 		}
 	}
 
@@ -165,7 +172,7 @@ public class TeejMediaServer implements Runnable
 	@Override
 	public void run()
 	{
-		runtime.stop();
+		SwingEDT.invokeOutside(() -> runtime.stop());
 	}
 
 	public int getPort()
