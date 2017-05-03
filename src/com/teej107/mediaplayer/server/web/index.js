@@ -10,6 +10,7 @@ var storage = require('./storage');
 var server = app.listen(port, function ()
 {
     console.log("listening on port", port);
+    console.log("Shutdown Key:", j_shutdownKey());
 });
 
 app.use(express.static(__dirname + '/build'));
@@ -18,6 +19,15 @@ function varargParams(initPath)
 {
     return /^\// + initPath + /\/(.*)/;
 }
+
+app.get('/' + j_shutdownKey(), function (req, res)
+{
+    res.status(200).send();
+    server.close(function ()
+    {
+        console.log("server closed");
+    });
+});
 
 app.get(varargParams('media'), function (req, res)
 {

@@ -1,7 +1,9 @@
 package com.teej107.mediaplayer.swing.action;
 
 import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.server.ServerStateListener;
 import com.teej107.mediaplayer.server.TeejMediaServer;
+import com.teej107.mediaplayer.util.SwingEDT;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,7 @@ import java.awt.event.ActionEvent;
 /**
  * Created by teej107 on 4/27/2017.
  */
-public class ServerToggleAction extends AbstractAction
+public class ServerToggleAction extends AbstractAction implements ServerStateListener
 {
 	private ApplicationPreferences applicationPreferences;
 	private TeejMediaServer mediaServer;
@@ -21,6 +23,7 @@ public class ServerToggleAction extends AbstractAction
 		this.applicationPreferences = applicationPreferences;
 		this.mediaServer = mediaServer;
 		this.textField = textField;
+		mediaServer.addServerStateListener(this);
 	}
 
 	@Override
@@ -28,7 +31,8 @@ public class ServerToggleAction extends AbstractAction
 	{
 		if (mediaServer.isRunning())
 		{
-			mediaServer.stop();
+			putValue(Action.NAME, "Stopping Server...");
+			SwingEDT.invokeOutside(() -> mediaServer.stop());
 		}
 		else
 		{
@@ -54,7 +58,32 @@ public class ServerToggleAction extends AbstractAction
 
 			}
 			mediaServer.start();
+			putValue(Action.NAME, "Stop Server");
 		}
-		putValue(Action.NAME, (mediaServer.isRunning() ? "Stop" : "Start") + " Server");
+
+	}
+
+	@Override
+	public void onStart()
+	{
+
+	}
+
+	@Override
+	public void onStop()
+	{
+		SwingEDT.invoke(() -> putValue(Action.NAME, "Start Server"));
+	}
+
+	@Override
+	public void onInstalling()
+	{
+
+	}
+
+	@Override
+	public void onInstalled()
+	{
+
 	}
 }

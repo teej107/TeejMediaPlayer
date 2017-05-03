@@ -5,6 +5,7 @@ import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.CounterFileVisitor;
 import com.teej107.mediaplayer.swing.ApplicationStatusBar;
 import com.teej107.mediaplayer.util.SwingEDT;
+import com.teej107.mediaplayer.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,13 +22,15 @@ public class NodeRuntime implements Runnable
 	private Thread nodeThread;
 	private Path root;
 	private File indexjs;
-	private volatile boolean isCopying;
+	private volatile boolean isCopying, stopping;
+	private volatile String shutdownKey;
 
 	public NodeRuntime(TeejMediaServer mediaServer, Path root, boolean copy)
 	{
 		this.mediaServer = mediaServer;
 		this.root = root;
 		this.isCopying = false;
+		this.stopping = false;
 		if (copy)
 		{
 			copyNode();
@@ -76,38 +79,53 @@ public class NodeRuntime implements Runnable
 		return indexjs.exists();
 	}
 
-	public void start()
+	public boolean start()
 	{
-		if (!exists())
-			return;
+		if (!exists() || isRunning())
+			return false;
 
 		if (nodeThread == null)
 		{
 			nodeThread = new Thread(this);
 		}
 		nodeThread.start();
+		return true;
 	}
 
-	public void stop()
+	public boolean stop()
 	{
-		if (nodeThread == null)
-			return;
+		if (nodeThread == null || stopping)
+			return false;
 
-		nodeThread.interrupt();
-		nodeThread = null;
+		stopping = true;
 		try
 		{
-			URL url = new URL("http://localhost:" + mediaServer.getPort());
+			URL url = new URL("http://localhost:" + mediaServer.getPort() + "/" + shutdownKey);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			connection.connect();
-			connection.setConnectTimeout(1);
-			connection.disconnect();
+			connection.getResponseCode();
+			connection.getInputStream().close();
+			while (shutdownKey != null)
+			{
+				Thread.yield();
+				try
+				{
+					Thread.currentThread().sleep(100);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 		catch (IOException e)
 		{
 			System.err.println(e.getMessage());
+			nodeThread.interrupt();
 		}
+		stopping = false;
+		nodeThread = null;
+		return true;
 	}
 
 	public boolean isRunning()
@@ -130,6 +148,8 @@ public class NodeRuntime implements Runnable
 			{
 				nodejs.getRuntime().registerJavaMethod(entry.getValue(), entry.getKey());
 			}
+			shutdownKey = Util.getRandomAlphaNumeric(64);
+			nodejs.getRuntime().registerJavaMethod((JavaCallback) (v8Object, v8Array) -> shutdownKey, "j_shutdownKey");
 			nodejs.exec(indexjs);
 			while (!Thread.currentThread().isInterrupted() && nodejs.isRunning())
 			{
@@ -137,6 +157,7 @@ public class NodeRuntime implements Runnable
 			}
 			nodejs.release();
 			System.out.println("Node server released");
+			shutdownKey = null;
 		}
 	}
 }

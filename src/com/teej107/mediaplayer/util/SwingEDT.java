@@ -1,5 +1,7 @@
 package com.teej107.mediaplayer.util;
 
+import com.teej107.mediaplayer.Application;
+
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
@@ -27,5 +29,17 @@ public class SwingEDT
 			}
 		}
 		return true;
+	}
+
+	public static void invokeOutside(Runnable runnable)
+	{
+		if(SwingUtilities.isEventDispatchThread())
+		{
+			Application.instance().getThreadService().submit(runnable);
+		}
+		else
+		{
+			runnable.run();
+		}
 	}
 }

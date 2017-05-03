@@ -60,13 +60,17 @@ public class TeejMediaServer implements Runnable
 		try
 		{
 			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(
-					new InputStreamReader(getClass().getResourceAsStream("/com/teej107/mediaplayer/server/web/package.json")));
+			InputStreamReader isr = new InputStreamReader(
+					getClass().getResourceAsStream("/com/teej107/mediaplayer/server/web/package.json"));
+			JSONObject jsonObject = (JSONObject) parser.parse(isr);
+			isr.close();
 			embeddedVersion = new Version((String) jsonObject.get("version"));
 			Path packagejson = applicationPreferences.getServerRootDirectory().resolve("package.json");
 			if (runtime.exists() && Files.exists(packagejson))
 			{
-				jsonObject = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(packagejson)));
+				isr = new InputStreamReader(Files.newInputStream(packagejson));
+				jsonObject = (JSONObject) parser.parse(isr);
+				isr.close();
 				installedVersion = new Version((String) jsonObject.get("version"));
 			}
 			else
@@ -89,18 +93,21 @@ public class TeejMediaServer implements Runnable
 		return runtime.exists() && embeddedVersion.equals(installedVersion);
 	}
 
-	public void install()
+	public boolean install()
 	{
-		for(ServerStateListener listener : serverStateListeners)
+		if (runtime.isCopying())
+			return false;
+		for (ServerStateListener listener : serverStateListeners)
 		{
 			listener.onInstalling();
 		}
 		runtime.copyNode();
 		readServerVersion();
-		for(ServerStateListener listener : serverStateListeners)
+		for (ServerStateListener listener : serverStateListeners)
 		{
 			listener.onInstalled();
 		}
+		return true;
 	}
 
 	public boolean isInstalling()
@@ -125,19 +132,23 @@ public class TeejMediaServer implements Runnable
 
 	public void start()
 	{
-		runtime.start();
-		for(ServerStateListener listener : serverStateListeners)
+		if (runtime.start())
 		{
-			listener.onStart();
+			for (ServerStateListener listener : serverStateListeners)
+			{
+				listener.onStart();
+			}
 		}
 	}
 
 	public void stop()
 	{
-		runtime.stop();
-		for(ServerStateListener listener : serverStateListeners)
+		if (runtime.stop())
 		{
-			listener.onStop();
+			for (ServerStateListener listener : serverStateListeners)
+			{
+				listener.onStop();
+			}
 		}
 	}
 

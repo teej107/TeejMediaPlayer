@@ -16,6 +16,6 @@ public class ServerDialog extends JDialog
 		setContentPane(
 				new ServerPanel(application.getApplicationPreferences(), application.getMediaServer(), application.getThreadService()));
 		setLocationRelativeTo(application.getApplicationFrame());
-		setMinimumSize(new Dimension(225, 220));
+		setMinimumSize(new Dimension(250, 220));
 	}
 }
