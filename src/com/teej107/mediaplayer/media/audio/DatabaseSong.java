@@ -49,7 +49,7 @@ public class DatabaseSong implements ISong
 	@Override
 	public int getYear()
 	{
-		return row.getObject("year", int.class);
+		return row.getObject("year", Integer.class);
 	}
 
 	@Override

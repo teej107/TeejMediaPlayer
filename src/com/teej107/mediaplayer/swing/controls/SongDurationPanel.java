@@ -42,7 +42,6 @@ public class SongDurationPanel extends JPanel implements TimeChangeListener, Son
 	@Override
 	public void onTimeChange(int currentSeconds)
 	{
-		System.out.println(currentSeconds);
 		durationSlider.setValue(currentSeconds);
 		currentTime.setText(formatNumber(currentSeconds / 60, currentSeconds % 60));
 		int timeLeft = durationSlider.getMaximum() - currentSeconds;

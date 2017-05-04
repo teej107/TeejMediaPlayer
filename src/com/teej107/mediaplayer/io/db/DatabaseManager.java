@@ -147,6 +147,15 @@ public class DatabaseManager
 			Tag tag = f.getTag();
 			URI uri = path.toUri();
 			String title = tag.getFirst(FieldKey.TITLE);
+			if(title.isEmpty())
+			{
+				title = Paths.get(uri).getFileName().toString();
+				int index = title.lastIndexOf('.');
+				if(index > -1)
+				{
+					title = title.substring(0, index);
+				}
+			}
 			String artist = tag.getFirst(FieldKey.ARTIST);
 			String album = tag.getFirst(FieldKey.ALBUM);
 			String yearStr = tag.getFirst(FieldKey.YEAR);

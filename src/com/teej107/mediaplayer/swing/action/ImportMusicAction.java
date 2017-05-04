@@ -1,8 +1,9 @@
 package com.teej107.mediaplayer.swing.action;
 
 import com.sun.javafx.application.PlatformImpl;
-import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.io.ApplicationPreferences;
 import com.teej107.mediaplayer.io.AudioFileVisitor;
+import com.teej107.mediaplayer.io.db.DatabaseManager;
 import javafx.stage.DirectoryChooser;
 
 import javax.swing.*;
@@ -17,13 +18,22 @@ import java.nio.file.Path;
  */
 public class ImportMusicAction extends AbstractAction
 {
+	private DatabaseManager databaseManager;
+	private ApplicationPreferences applicationPreferences;
 	private DirectoryChooser fileChooser;
 
-	public ImportMusicAction()
+	public ImportMusicAction(DatabaseManager databaseManager, ApplicationPreferences applicationPreferences)
 	{
 		super("Import Music");
+		this.databaseManager = databaseManager;
+		this.applicationPreferences = applicationPreferences;
 		this.fileChooser = new DirectoryChooser();
 		this.fileChooser.setTitle((String) getValue(Action.NAME));
+		Path initPath = applicationPreferences.getMusicRootDirectory();
+		if(initPath != null && Files.exists(initPath))
+		{
+			fileChooser.setInitialDirectory(initPath.getParent().toFile());
+		}
 	}
 
 	@Override
@@ -36,11 +46,12 @@ public class ImportMusicAction extends AbstractAction
 				return;
 
 			Path path = file.toPath();
-			Application.instance().getDatabaseManager().purgeLibrary();
+			databaseManager.purgeLibrary();
 			try
 			{
 				Files.walkFileTree(path, new AudioFileVisitor());
-				Application.instance().getDatabaseManager().commit();
+				databaseManager.commit();
+				applicationPreferences.setMusicRootDirectory(path);
 			}
 			catch (IOException e1)
 			{

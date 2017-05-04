@@ -7,7 +7,7 @@ module.exports = {
     getSongFile: function (req, res)
     {
         var from = req.params[0];
-        var song = storage.getSong(from);
+        var song = storage.getSongFile(from);
         if (song)
         {
             res.sendFile(song, {root: ''});
@@ -16,5 +16,11 @@ module.exports = {
         {
             res.status(404).send(from + " not found");
         }
+    },
+    getSongJSON: function (req, res)
+    {
+        var from = req.params[0];
+        var json = storage.getSongJSON(from);
+        res.send(json);
     }
 };

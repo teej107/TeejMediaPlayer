@@ -86,7 +86,7 @@ public class AlbumManager
 
 	public Path getAlbumCoverPath(ISong song)
 	{
-		return applicationPreferences.getAlbumRootDirectory().resolve(song.getArtist()).resolve(song.getAlbum() + "." + IMAGE_FORMAT);
+		return applicationPreferences.getAlbumArtRootDirectory().resolve(song.getArtist()).resolve(song.getAlbum() + "." + IMAGE_FORMAT);
 	}
 
 	public Image getAlbumCover(ISong song)

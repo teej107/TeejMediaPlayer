@@ -129,7 +129,7 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 
 	public ServerDialog getServerDialog()
 	{
-		if(serverDialog == null)
+		if (serverDialog == null)
 		{
 			this.serverDialog = new ServerDialog(this);
 		}
@@ -149,14 +149,25 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 
 	/**
 	 * Invokes the shutdown hooks then quits the application
+	 * @return returns false if user prevented application exit. Otherwise returns *quits*
 	 */
-	public void exit()
+	public boolean exit()
 	{
+		if (mediaServer.isRunning() && !mediaServer.isStopping())
+		{
+			if (JOptionPane.showConfirmDialog(applicationFrame, "The server is currently running. Do you want to kill the server?",
+					Platform.getPlatform().getTerminate() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
+			{
+				applicationFrame.setExtendedState(JFrame.ICONIFIED);
+				return false;
+			}
+		}
 		for (ComparableObject<Runnable> obj : shutdownHooks)
 		{
 			obj.getObject().run();
 		}
 		System.exit(0);
+		return true;
 	}
 
 	/**

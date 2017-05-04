@@ -6,6 +6,7 @@ import com.teej107.mediaplayer.util.Response;
 
 import javax.swing.*;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 /**
@@ -17,6 +18,7 @@ public class ApplicationPreferences implements Runnable
 	private static final String PLAYER_STATE = "player-state";
 	private static final String SERVER_PORT = "server-port";
 	private static final String API_STATE = "api-state";
+	private static final String MUSIC_ROOT_DIR = "music-root-directory";
 
 	private Preferences prefs;
 	private WindowState windowState;
@@ -103,7 +105,7 @@ public class ApplicationPreferences implements Runnable
 		return Platform.getPlatform().getAppDataDirectory().resolve("server");
 	}
 
-	public Path getAlbumRootDirectory()
+	public Path getAlbumArtRootDirectory()
 	{
 		return Platform.getPlatform().getAppDataDirectory().resolve("Album Art");
 	}
@@ -116,6 +118,19 @@ public class ApplicationPreferences implements Runnable
 	public void setServerPort(int port)
 	{
 		prefs.putInt(SERVER_PORT, port);
+	}
+
+	public void setMusicRootDirectory(Path path)
+	{
+		prefs.put(MUSIC_ROOT_DIR, path.toString());
+	}
+
+	public Path getMusicRootDirectory()
+	{
+		String sPath = prefs.get(MUSIC_ROOT_DIR, null);
+		if(sPath == null)
+			return null;
+		return Paths.get(sPath);
 	}
 
 	/**

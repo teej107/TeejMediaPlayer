@@ -4,16 +4,16 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
-import com.teej107.mediaplayer.media.audio.DatabaseSong;
 import com.teej107.mediaplayer.util.SwingEDT;
 import com.teej107.mediaplayer.util.Version;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
-import java.net.URI;
-import java.nio.file.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -23,6 +23,7 @@ public class TeejMediaServer implements Runnable
 {
 	private NodeRuntime runtime;
 	private ApplicationPreferences applicationPreferences;
+	private ServerApi serverApi;
 	private Map<String, JavaCallback> javaCallbacks;
 	private Map<String, JavaVoidCallback> javaVoidCallbacks;
 	private final Object collectionLock;
@@ -33,6 +34,7 @@ public class TeejMediaServer implements Runnable
 	{
 		this.applicationPreferences = application.getApplicationPreferences();
 		this.runtime = new NodeRuntime(this, applicationPreferences.getServerRootDirectory(), false);
+		this.serverApi = new ServerApi(application);
 		this.javaCallbacks = new HashMap<>();
 		this.javaVoidCallbacks = new HashMap<>();
 		this.collectionLock = new Object();
@@ -41,17 +43,8 @@ public class TeejMediaServer implements Runnable
 		readServerVersion();
 
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
-		addJavaCallback("j_getFile", (JavaCallback) (v8Object, v8Array) ->
-		{
-			if (v8Array.length() > 0)
-			{
-				URI uri = Paths.get(v8Array.getString(0)).toUri();
-				DatabaseSong song = application.getDatabaseManager().getSongByURI(uri);
-				if (song != null)
-					return new File(uri).getAbsolutePath();
-			}
-			return null;
-		});
+		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
+		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
 
 		application.addShutdownHook(this, 1410);
 	}
@@ -162,6 +155,11 @@ public class TeejMediaServer implements Runnable
 	public boolean isRunning()
 	{
 		return runtime.isRunning();
+	}
+
+	public boolean isStopping()
+	{
+		return runtime.isStopping();
 	}
 
 	public boolean addServerStateListener(ServerStateListener listener)

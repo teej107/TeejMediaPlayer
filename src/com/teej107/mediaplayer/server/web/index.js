@@ -15,11 +15,7 @@ const server = app.listen(port, function ()
 });
 
 app.use(express.static(__dirname + '/build'));
-
-function varargParams(initPath)
-{
-    return /^\// + initPath + /\/(.*)/;
-}
+app.use(require('body-parser').json());
 
 /**
  * Should only be used by application to gracefully stop node.
@@ -35,11 +31,7 @@ app.get('/' + shutdownKey, function (req, res)
     });
 });
 
-app.get("/test/:id", apiController.getSongFile);
-
-app.get('/sanity', function (req, res)
-{
-   res.send("Yup it works!")
-});
+app.get('/api/media/*', apiController.getSongFile);
+app.get('/api/song/*', apiController.getSongJSON);
 
 

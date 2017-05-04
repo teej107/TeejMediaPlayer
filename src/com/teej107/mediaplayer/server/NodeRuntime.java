@@ -92,6 +92,11 @@ public class NodeRuntime implements Runnable
 		return true;
 	}
 
+	public boolean isStopping()
+	{
+		return stopping;
+	}
+
 	public boolean stop()
 	{
 		if (nodeThread == null || stopping)

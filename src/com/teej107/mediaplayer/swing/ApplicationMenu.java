@@ -12,12 +12,13 @@ public class ApplicationMenu extends JMenuBar
 {
 	public ApplicationMenu()
 	{
+		Application app = Application.instance();
 		add(new JMenuChain("File")
-				.append(new ImportMusicAction())
+				.append(new ImportMusicAction(app.getDatabaseManager(), app.getApplicationPreferences()))
 				.separator()
 				.append(new ExitAction()));
 		add(new JMenuChain("Edit")
-				.append(new ShowServerDialogAction(Application.instance())));
+				.append(new ShowServerDialogAction(app)));
 	}
 
 	class JMenuChain extends JMenu

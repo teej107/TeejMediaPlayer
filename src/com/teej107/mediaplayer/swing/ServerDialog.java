@@ -10,12 +10,15 @@ import java.awt.*;
  */
 public class ServerDialog extends JDialog
 {
+	private ServerPanel serverPanel;
+
 	public ServerDialog(Application application)
 	{
 		super(application.getApplicationFrame(), "Server");
-		setContentPane(
-				new ServerPanel(application.getApplicationPreferences(), application.getMediaServer(), application.getThreadService()));
+		this.serverPanel = new ServerPanel(application.getApplicationPreferences(), application.getMediaServer(),
+				application.getThreadService());
+		setContentPane(serverPanel);
 		setLocationRelativeTo(application.getApplicationFrame());
-		setMinimumSize(new Dimension(250, 220));
+		setMinimumSize(new Dimension(250, 230));
 	}
 }
