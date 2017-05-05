@@ -13,6 +13,7 @@ class SongInfo extends Component
             artist: props.artist,
             album: props.album
         }
+        this.audioPlayer = props.audioPlayer;
     }
 
     render()

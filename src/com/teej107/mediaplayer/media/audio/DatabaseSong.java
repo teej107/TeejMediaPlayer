@@ -1,6 +1,7 @@
 package com.teej107.mediaplayer.media.audio;
 
 import com.teej107.mediaplayer.io.db.Row;
+import com.teej107.mediaplayer.util.Util;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.images.Artwork;
@@ -91,5 +92,11 @@ public class DatabaseSong implements ISong
 	public Row getRow()
 	{
 		return row;
+	}
+
+	@Override
+	public String toString()
+	{
+		return Util.toJSON(this);
 	}
 }

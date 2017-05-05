@@ -8,7 +8,10 @@ module.exports = {
     },
     getSongJSON: function (path)
     {
-        var rawData = j_getSongJSON(path);
-        return JSON.parse(rawData);
+        return JSON.parse(j_getSongJSON(path));
+    },
+    getLibrary: function ()
+    {
+        return JSON.parse(j_getLibrary());
     }
 };

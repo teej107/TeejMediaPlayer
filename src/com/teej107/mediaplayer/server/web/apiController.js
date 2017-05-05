@@ -22,5 +22,9 @@ module.exports = {
         var from = req.params[0];
         var json = storage.getSongJSON(from);
         res.send(json);
+    },
+    getLibrary: function (req, res)
+    {
+        res.send(storage.getLibrary());
     }
 };

@@ -10,11 +10,19 @@ class AudioPlayer
 
     setSong(url)
     {
+        console.log(url);
+        if(!url)
+            return false;
         this.mediaPlayer.src = url;
+        return true;
     }
 
-    play()
+    play(url)
     {
+        if(url !== undefined)
+        {
+            this.setSong(url);
+        }
         this.mediaPlayer.play();
     }
 

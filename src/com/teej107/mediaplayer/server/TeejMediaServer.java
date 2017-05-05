@@ -4,8 +4,8 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
-import com.teej107.mediaplayer.util.SwingEDT;
-import com.teej107.mediaplayer.util.Version;
+import com.teej107.mediaplayer.media.audio.DatabaseSong;
+import com.teej107.mediaplayer.util.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,6 +45,16 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
+		addJavaCallback("j_getLibrary", (v8Object, v8Array) ->
+		{
+			JSONObject jsonObject = new JSONObject();
+			for(DatabaseSong song : application.getDatabaseManager().getLibrary())
+			{
+				JSONObject songJson = Util.toJSONObject(song);
+				jsonObject.put(songJson.get("path"), song);
+			}
+			return jsonObject.toString();
+		});
 
 		application.addShutdownHook(this, 1410);
 	}
@@ -84,8 +94,7 @@ public class TeejMediaServer implements Runnable
 
 	public boolean isInstalled()
 	{
-		//TODO: Don't forget to uncomment
-		return false/*runtime.exists() && embeddedVersion.equals(installedVersion)*/;
+		return runtime.exists() && embeddedVersion.equals(installedVersion);
 	}
 
 	public boolean install()

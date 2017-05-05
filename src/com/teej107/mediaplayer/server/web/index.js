@@ -33,5 +33,6 @@ app.get('/' + shutdownKey, function (req, res)
 
 app.get('/api/media/*', apiController.getSongFile);
 app.get('/api/song/*', apiController.getSongJSON);
+app.get('/api/library', apiController.getLibrary);
 
 

@@ -2,7 +2,7 @@ package com.teej107.mediaplayer.server;
 
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
-import org.json.simple.JSONObject;
+import com.teej107.mediaplayer.util.Util;
 
 import java.io.File;
 import java.net.URI;
@@ -43,7 +43,6 @@ public class ServerApi
 
 	public String getSongJSON(String urlPath)
 	{
-		JSONObject jsonObject = new JSONObject();
 		URI uri = getSongURI(urlPath);
 		if(uri != null)
 		{
@@ -51,14 +50,8 @@ public class ServerApi
 			if(song == null)
 				return "{}";
 
-			jsonObject.put("artist", song.getArtist());
-			jsonObject.put("title", song.getTitle());
-			jsonObject.put("album", song.getAlbum());
-			jsonObject.put("path", urlPath);
-			jsonObject.put("year", song.getYear());
-			jsonObject.put("genre", song.getGenre());
-			jsonObject.put("duration", song.getDuration());
+			return Util.toJSON(song, urlPath);
 		}
-		return jsonObject.toString();
+		return "{}";
 	}
 }

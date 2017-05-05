@@ -3,6 +3,7 @@ package com.teej107.mediaplayer.swing;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.swing.controls.MusicInfoControlPanel;
 import com.teej107.mediaplayer.swing.selection.SongTable;
+import com.teej107.mediaplayer.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +31,8 @@ public class ApplicationPanel extends JPanel
 
 		this.statusBar = new ApplicationStatusBar();
 		add(statusBar, BorderLayout.PAGE_END);
+
+		Util.setChildrenUnfocusable(this);
 	}
 
 	public ApplicationStatusBar getStatusBar()

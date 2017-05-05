@@ -6,6 +6,7 @@ import com.teej107.mediaplayer.swing.action.ServerToggleAction;
 import com.teej107.mediaplayer.swing.components.LabelTextfield;
 import com.teej107.mediaplayer.swing.listener.InstallServerMouseListener;
 import com.teej107.mediaplayer.util.SwingEDT;
+import com.teej107.mediaplayer.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,6 +82,8 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 		add(save);
 
 		update();
+
+		Util.setChildrenUnfocusable(this);
 	}
 
 	public void update()

@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import SplitPane from 'react-split-pane';
+import SplitPane from "react-split-pane";
 import MusicInfoControl from "./components/MusicInfoControl";
-import AudioPlayer from './media/AudioPlayer';
-import './resizer.css';
+import AudioPlayer from "./media/AudioPlayer";
+import "./resizer.css";
+import SongTable from "./components/SongTable";
 
 class App extends Component
 {
@@ -15,9 +16,10 @@ class App extends Component
     render()
     {
         return (
-            <SplitPane split="vertical" minSize={50} defaultSize={100}>
+            <SplitPane split="vertical" minSize={document.documentElement.clientWidth / 6}
+                       defaultSize={document.documentElement.clientWidth / 3}>
                 <MusicInfoControl audioPlayer={this.audioPlayer}/>
-                <div></div>
+                <SongTable audioPlayer={this.audioPlayer}/>
             </SplitPane>
         );
     }
