@@ -56,6 +56,7 @@ public class NodeRuntime implements Runnable
 			});
 			Files.walkFileTree(path,
 					new NodeFileVisitor(root, (progress) -> SwingEDT.invoke(() -> statusBar.getProgressBar().setValue(progress))));
+			//Files.walkFileTree(Paths.get(getClass().getResource("/assets/button").toURI()), new CopyToPathVisitor(root.resolve("images")));
 			SwingEDT.invoke(() -> statusBar.setProgressVisible(false));
 		}
 		catch (URISyntaxException e)

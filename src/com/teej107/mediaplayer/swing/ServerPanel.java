@@ -9,20 +9,23 @@ import com.teej107.mediaplayer.util.SwingEDT;
 import com.teej107.mediaplayer.util.Util;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Created by teej107 on 4/26/2017.
  */
-public class ServerPanel extends JPanel implements MouseListener, KeyListener
+public class ServerPanel extends JPanel implements MouseListener, DocumentListener
 {
+	private final static String LOCAL_ADDRESS;
 	private SpringLayout layout;
 
 	private TeejMediaServer mediaServer;
@@ -40,7 +43,7 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 
 		this.serverPort = new LabelTextfield("Server Port");
 		this.serverPort.getTextField().setText(Integer.toString(applicationPreferences.getServerPort()));
-		this.serverPort.getTextField().addKeyListener(this);
+		this.serverPort.getTextField().getDocument().addDocumentListener(this);
 		layout.putConstraint(SpringLayout.WEST, serverPort, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.NORTH, serverPort, 0, SpringLayout.NORTH, this);
 		add(serverPort);
@@ -59,10 +62,10 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 		layout.putConstraint(SpringLayout.WEST, install, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.NORTH, install, 10, SpringLayout.SOUTH, embeddedVersion);
 		layout.putConstraint(SpringLayout.EAST, install, 140, SpringLayout.WEST, install);
-		install.addMouseListener(new InstallServerMouseListener(install,this, mediaServer));
+		install.addMouseListener(new InstallServerMouseListener(install, this, mediaServer));
 		add(install);
 
-		this.startServer = new JButton(new ServerToggleAction(applicationPreferences ,mediaServer, serverPort.getTextField()));
+		this.startServer = new JButton(new ServerToggleAction(applicationPreferences, mediaServer, serverPort.getTextField()));
 		layout.putConstraint(SpringLayout.WEST, startServer, 0, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.SOUTH, startServer, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, startServer, 140, SpringLayout.WEST, startServer);
@@ -90,7 +93,7 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 	{
 		embeddedVersion.setText("Embedded Version: " + mediaServer.getEmbeddedVersion());
 		installedVersion.setText("Installed Version: " + mediaServer.getInstalledVersion());
-		openInBrowser.setText("http://localhost:" + serverPort.getTextField().getText() + "/");
+		openInBrowser.setText("http://" + LOCAL_ADDRESS + ":" + serverPort.getTextField().getText() + "/");
 		install.setEnabled(!mediaServer.isInstalled());
 	}
 
@@ -103,7 +106,7 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		if(e.getSource().equals(save))
+		if (e.getSource().equals(save))
 		{
 			try
 			{
@@ -116,10 +119,10 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 			}
 			SwingUtilities.getWindowAncestor(this).dispose();
 		}
-		else if(e.getSource().equals(openInBrowser))
+		else if (e.getSource().equals(openInBrowser))
 		{
 			Desktop desktop = Desktop.getDesktop();
-			if(desktop.isSupported(Desktop.Action.BROWSE))
+			if (desktop.isSupported(Desktop.Action.BROWSE))
 			{
 				try
 				{
@@ -152,7 +155,7 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		if(e.getSource().equals(openInBrowser))
+		if (e.getSource().equals(openInBrowser))
 		{
 			Map attr = openInBrowser.getFont().getAttributes();
 			attr.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
@@ -163,7 +166,7 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		if(e.getSource().equals(openInBrowser))
+		if (e.getSource().equals(openInBrowser))
 		{
 			Map attr = openInBrowser.getFont().getAttributes();
 			attr.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE);
@@ -172,20 +175,36 @@ public class ServerPanel extends JPanel implements MouseListener, KeyListener
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e)
+	public void insertUpdate(DocumentEvent e)
 	{
 		SwingEDT.invoke(() -> update());
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e)
+	public void removeUpdate(DocumentEvent e)
 	{
-
+		SwingEDT.invoke(() -> update());
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e)
+	public void changedUpdate(DocumentEvent e)
 	{
+		SwingEDT.invoke(() -> update());
+	}
 
+	static
+	{
+		String address;
+		try
+		{
+			InetAddress inetAddress = InetAddress.getLocalHost();
+			address = inetAddress.getHostAddress();
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+			address = "http://localhost";
+		}
+		LOCAL_ADDRESS = address;
 	}
 }

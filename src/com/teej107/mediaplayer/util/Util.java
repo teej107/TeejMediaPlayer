@@ -6,6 +6,7 @@ import com.teej107.mediaplayer.media.audio.ISong;
 import org.json.simple.JSONObject;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,7 +67,7 @@ public class Util
 		component.setFocusable(false);
 		for (Component child : component.getComponents())
 		{
-			if (child instanceof JComponent)
+			if (child instanceof JComponent && !(child instanceof JTextComponent))
 			{
 				setChildrenUnfocusable((JComponent) child);
 			}

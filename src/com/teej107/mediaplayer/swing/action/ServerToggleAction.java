@@ -55,7 +55,7 @@ public class ServerToggleAction extends AbstractAction implements ServerStateLis
 			}
 			catch (NumberFormatException e1)
 			{
-
+				textField.setText(Integer.toString(applicationPreferences.getServerPort()));
 			}
 			mediaServer.start();
 			putValue(Action.NAME, "Stop Server");

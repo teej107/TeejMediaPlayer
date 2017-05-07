@@ -1,5 +1,5 @@
 Default Blue = #0080ed
-Active Blue = #006ac4
+Default White = 250, 250, 250
 
 Square images = 2160 x 2160
 Layers must be close edge to edge

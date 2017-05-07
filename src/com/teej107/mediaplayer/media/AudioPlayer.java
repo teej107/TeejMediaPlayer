@@ -3,14 +3,14 @@ package com.teej107.mediaplayer.media;
 import com.teej107.mediaplayer.media.audio.ISong;
 import com.teej107.mediaplayer.media.volume.VolumeChangeListener;
 import com.teej107.mediaplayer.media.volume.VolumeManager;
-import com.teej107.mediaplayer.util.SwingEDT;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,13 +45,10 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 		volumeManager.addVolumeChangeListener(this);
 		this.currentSong = song;
 
-		SwingEDT.invoke(() ->
+		for (SongChangeListener listener : songChangeListeners)
 		{
-			for (SongChangeListener listener : songChangeListeners)
-			{
-				listener.onSongChange(song);
-			}
-		});
+			listener.onSongChange(song);
+		}
 	}
 
 	public void seek(int seconds)
@@ -139,14 +136,10 @@ public class AudioPlayer implements ChangeListener<Duration>, VolumeChangeListen
 	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue)
 	{
 		final int seconds = (int) Math.ceil(oldValue.toSeconds());
-		SwingEDT.invoke(() ->
+		for (TimeChangeListener listener : timeChangeListeners)
 		{
-			for (TimeChangeListener listener : timeChangeListeners)
-			{
-				listener.onTimeChange(seconds);
-			}
-		});
-
+			listener.onTimeChange(seconds);
+		}
 	}
 
 	@Override

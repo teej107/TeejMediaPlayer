@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.swing.controls;
 
+import com.teej107.mediaplayer.io.ImageLoader;
 import com.teej107.mediaplayer.media.AudioPlayer;
 import com.teej107.mediaplayer.media.SongPlaybackListener;
 import com.teej107.mediaplayer.swing.components.ImageButton;
@@ -8,7 +9,8 @@ import com.teej107.mediaplayer.util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+
+import static com.teej107.mediaplayer.util.ImageUtil.scaleToDimension;
 
 /**
  * Created by teej107 on 4/18/17.
@@ -23,27 +25,22 @@ public class PlaybackControlPanel extends JPanel implements SongPlaybackListener
 	{
 		super(new GridLayout(1, 3));
 		Dimension preferredDimension = new Dimension(0, 100);
-		try
-		{
-			String path = "/assets/button/";
-			Image playImage = ImageUtil.loadImageResource(path + "play.png", preferredDimension);
-			this.playIcon = new ImageIcon(playImage);
-			Image playPressImage = ImageUtil.loadImageResource(path + "play press.png", preferredDimension);
-			this.playPressIcon = new ImageIcon(playPressImage);
-			this.pauseIcon = new ImageIcon(ImageUtil.loadImageResource(path + "pause.png", preferredDimension));
-			this.pausePressIcon = new ImageIcon(ImageUtil.loadImageResource(path + "pause press.png", preferredDimension));
+		ImageLoader loader = ImageLoader.getInstance();
 
-			Image nextImage = ImageUtil.loadImageResource(path + "next.png", preferredDimension);
-			this.nextIcon = new ImageIcon(nextImage);
-			Image nextPressImage = ImageUtil.loadImageResource(path + "next press.png", preferredDimension);
-			this.nextPressIcon = new ImageIcon(nextPressImage);
-			this.prevIcon = new ImageIcon(ImageUtil.flip(nextImage, -1, 1));
-			this.prevPressIcon = new ImageIcon(ImageUtil.flip(nextPressImage, -1, 1));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		String path = "/assets/button/";
+		Image playImage = scaleToDimension(loader.getPlayButton(false), preferredDimension);
+		this.playIcon = new ImageIcon(playImage);
+		Image playPressImage = scaleToDimension(loader.getPlayButton(true), preferredDimension);
+		this.playPressIcon = new ImageIcon(playPressImage);
+		this.pauseIcon = new ImageIcon(scaleToDimension(loader.getPauseButton(false), preferredDimension));
+		this.pausePressIcon = new ImageIcon(scaleToDimension(loader.getPauseButton(true), preferredDimension));
+
+		Image nextImage = scaleToDimension(loader.getNextButton(false), preferredDimension);
+		this.nextIcon = new ImageIcon(nextImage);
+		Image nextPressImage = scaleToDimension(loader.getNextButton(true), preferredDimension);
+		this.nextPressIcon = new ImageIcon(nextPressImage);
+		this.prevIcon = new ImageIcon(ImageUtil.flip(nextImage, -1, 1));
+		this.prevPressIcon = new ImageIcon(ImageUtil.flip(nextPressImage, -1, 1));
 
 		this.previous = new ImageButton(prevIcon, prevPressIcon, preferredDimension);
 		this.playToggle = new ImageButton(playIcon, playPressIcon, preferredDimension);

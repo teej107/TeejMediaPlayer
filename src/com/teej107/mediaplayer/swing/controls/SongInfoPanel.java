@@ -3,6 +3,7 @@ package com.teej107.mediaplayer.swing.controls;
 import com.teej107.mediaplayer.media.AudioPlayer;
 import com.teej107.mediaplayer.media.SongChangeListener;
 import com.teej107.mediaplayer.media.audio.ISong;
+import com.teej107.mediaplayer.util.SwingEDT;
 
 import javax.swing.*;
 
@@ -32,8 +33,12 @@ public class SongInfoPanel extends JPanel implements SongChangeListener
 	@Override
 	public void onSongChange(ISong song)
 	{
-		title.setText(song.getTitle());
-		artist.setText(song.getArtist());
-		album.setText(song.getAlbum());
+		SwingEDT.invoke(() ->
+		{
+			title.setText(song.getTitle());
+			artist.setText(song.getArtist());
+			album.setText(song.getAlbum());
+		});
+
 	}
 }

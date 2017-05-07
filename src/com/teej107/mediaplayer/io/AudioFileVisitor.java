@@ -28,7 +28,7 @@ public class AudioFileVisitor extends SimpleFileVisitor<Path>
 		}
 		catch (IllegalArgumentException e)
 		{
-			System.out.println(fileStr.substring(extIndex + 1).toUpperCase());
+
 		}
 		return FileVisitResult.CONTINUE;
 	}

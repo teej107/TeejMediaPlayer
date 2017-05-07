@@ -2,11 +2,14 @@ package com.teej107.mediaplayer.swing;
 
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.WindowState;
+import com.teej107.mediaplayer.util.ImageUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 
 /**
  * Created by teej107 on 4/14/2017.
@@ -33,6 +36,16 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 
 		this.applicationPanel = new ApplicationPanel();
 		setContentPane(applicationPanel);
+
+		try
+		{
+			Image image = ImageUtil.ratioHeight(ImageIO.read(getClass().getResource("/assets/icon.png")), 128);
+			setIconImage(image);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		application.addShutdownHook(this, Integer.MAX_VALUE - 1);
 	}

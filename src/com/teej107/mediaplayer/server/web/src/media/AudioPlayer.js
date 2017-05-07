@@ -6,22 +6,28 @@ class AudioPlayer
     constructor()
     {
         this.mediaPlayer = new Audio();
+        this.songChangeListeners = [];
     }
 
-    setSong(url)
+
+    setSong(song)
     {
-        console.log(url);
-        if(!url)
+        if (!song)
             return false;
-        this.mediaPlayer.src = url;
+        this.song = song;
+        this.mediaPlayer.src = song.path;
+        this.songChangeListeners.forEach(function (callback)
+        {
+           callback(song);
+        });
         return true;
     }
 
-    play(url)
+    play(song)
     {
-        if(url !== undefined)
+        if (song !== undefined)
         {
-            this.setSong(url);
+            this.setSong(song);
         }
         this.mediaPlayer.play();
     }

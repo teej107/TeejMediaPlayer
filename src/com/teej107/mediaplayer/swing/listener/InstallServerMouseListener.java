@@ -14,22 +14,28 @@ import java.awt.event.MouseListener;
  */
 public class InstallServerMouseListener implements MouseListener, ServerStateListener
 {
+	private static final String REINSTALL = "Reinstall";
+
 	private AbstractButton abstractButton;
 	private ServerPanel serverPanel;
 	private TeejMediaServer mediaServer;
+	private String buttonText;
+	private Timer timer;
 
 	public InstallServerMouseListener(AbstractButton abstractButton, ServerPanel serverPanel, TeejMediaServer mediaServer)
 	{
 		this.abstractButton = abstractButton;
 		this.mediaServer = mediaServer;
 		this.serverPanel = serverPanel;
+		this.buttonText = abstractButton.getText();
+		this.timer = new Timer(1000, (ActionEvent) -> mouseExited(null));
 		mediaServer.addServerStateListener(this);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		if (abstractButton.isEnabled() && (!mediaServer.isInstalling() && !mediaServer.isInstalled()))
+		if (abstractButton.isEnabled() && !mediaServer.isInstalling())
 		{
 			SwingEDT.invokeOutside(() -> mediaServer.install());
 		}
@@ -50,13 +56,26 @@ public class InstallServerMouseListener implements MouseListener, ServerStateLis
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-
+		if(!abstractButton.isEnabled() && !mediaServer.isInstalling())
+		{
+			abstractButton.setEnabled(true);
+			abstractButton.setText(REINSTALL);
+			timer.start();
+		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-
+		if(abstractButton.getText().equals(REINSTALL))
+		{
+			if(timer.isRunning())
+			{
+				timer.stop();
+			}
+			abstractButton.setEnabled(false);
+			abstractButton.setText(buttonText);
+		}
 	}
 
 	@Override

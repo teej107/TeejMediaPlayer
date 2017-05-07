@@ -1,1 +1,1 @@
-SELECT * FROM music
+SELECT * FROM music ORDER BY ?

@@ -1,11 +1,9 @@
 package com.teej107.mediaplayer.util;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 /**
  * @author teej107
@@ -121,18 +119,16 @@ public class ImageUtil
 		g2d.dispose();
 		return bufferedImage;
 	}
-
-	public static Image loadImageResource(String asset, Dimension preferredDimension) throws IOException
+	
+	public static Image scaleToDimension(Image image, Dimension dimension)
 	{
-		Image image = ImageIO.read(ImageUtil.class.getResource(asset));
-		if (preferredDimension.width > 0 && preferredDimension.height > 0)
-			return resize(image, preferredDimension.width, preferredDimension.height);
-		else if (preferredDimension.width == 0 && preferredDimension.height > 0)
-			return ratioHeight(image, preferredDimension.height);
-		else if (preferredDimension.height == 0 && preferredDimension.width > 0)
-			return ratioWidth(image, preferredDimension.width);
+		if (dimension.width > 0 && dimension.height > 0)
+			return resize(image, dimension.width, dimension.height);
+		else if (dimension.width == 0 && dimension.height > 0)
+			return ratioHeight(image, dimension.height);
+		else if (dimension.height == 0 && dimension.width > 0)
+			return ratioWidth(image, dimension.width);
 
-		throw new IllegalArgumentException(preferredDimension.toString());
+		throw new IllegalArgumentException(dimension.toString());
 	}
-
 }

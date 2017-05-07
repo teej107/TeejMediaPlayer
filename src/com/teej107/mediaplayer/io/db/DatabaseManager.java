@@ -224,14 +224,15 @@ public class DatabaseManager
 		return null;
 	}
 
-	public List<DatabaseSong> getLibrary()
+	public List<DatabaseSong> getLibrary(OrderBy order)
 	{
 		try
 		{
 			int count = getLibraryCount();
 			List<DatabaseSong> collection = new ArrayList<>(count);
-
+			library.setString(1, order.toString());
 			ResultSet resultSet = library.executeQuery();
+			library.clearParameters();
 			while(resultSet.next())
 			{
 				collection.add(new DatabaseSong(new Row(resultSet)));
@@ -243,6 +244,31 @@ public class DatabaseManager
 		{
 			e.printStackTrace();
 			return new ArrayList<>();
+		}
+	}
+
+	public List<DatabaseSong> getLibrary()
+	{
+		return getLibrary(OrderBy.ARTIST);
+	}
+
+	public enum OrderBy
+	{
+		ARTIST("artist"),
+		TITLE("title"),
+		ALBUM("album");
+
+		private String order;
+
+		OrderBy(String order)
+		{
+			this.order = order;
+		}
+
+		@Override
+		public String toString()
+		{
+			return order;
 		}
 	}
 }

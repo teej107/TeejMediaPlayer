@@ -47,13 +47,13 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
 		addJavaCallback("j_getLibrary", (v8Object, v8Array) ->
 		{
-			JSONObject jsonObject = new JSONObject();
-			for(DatabaseSong song : application.getDatabaseManager().getLibrary())
+			Map map = new LinkedHashMap();
+			for (DatabaseSong song : application.getDatabaseManager().getLibrary())
 			{
 				JSONObject songJson = Util.toJSONObject(song);
-				jsonObject.put(songJson.get("path"), song);
+				map.put(songJson.get("path"), songJson);
 			}
-			return jsonObject.toString();
+			return JSONObject.toJSONString(map);
 		});
 
 		application.addShutdownHook(this, 1410);

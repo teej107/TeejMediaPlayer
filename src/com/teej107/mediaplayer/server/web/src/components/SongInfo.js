@@ -1,7 +1,7 @@
 /**
  * Created by Tanner Norton on 4/30/2017.
  */
-import React, { Component } from 'react';
+import React, {Component} from "react";
 
 class SongInfo extends Component
 {
@@ -14,16 +14,24 @@ class SongInfo extends Component
             album: props.album
         }
         this.audioPlayer = props.audioPlayer;
+        this.audioPlayer.songChangeListeners.push(function (song)
+        {
+            this.setState({
+                title: song.title,
+                artist: song.artist,
+                album: song.album
+            })
+        }.bind(this));
     }
 
     render()
     {
         return (
-          <div>
-              <p>{ this.state.title }</p>
-              <p>{ this.state.artist }</p>
-              <p>{ this.state.album }</p>
-          </div>
+            <div>
+                <p>{ this.state.title }</p>
+                <p>{ this.state.artist }</p>
+                <p>{ this.state.album }</p>
+            </div>
         );
     }
 }

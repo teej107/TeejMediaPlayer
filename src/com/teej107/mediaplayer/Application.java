@@ -1,7 +1,6 @@
 package com.teej107.mediaplayer;
 
-import com.teej107.mediaplayer.io.AlbumManager;
-import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.io.*;
 import com.teej107.mediaplayer.io.db.DatabaseManager;
 import com.teej107.mediaplayer.media.AudioPlayer;
 import com.teej107.mediaplayer.media.volume.VolumeManager;

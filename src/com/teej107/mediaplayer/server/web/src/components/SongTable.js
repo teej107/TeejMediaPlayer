@@ -4,6 +4,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import SongRow from "./SongRow";
+import Clusterize from "clusterize.js";
 
 class SongTable extends Component
 {
@@ -22,7 +23,12 @@ class SongTable extends Component
         axios.get("/api/library").then((response) =>
         {
             this.setState({library: response.data});
+            this.clusterize = new Clusterize({
+                scrollId: 'song-div',
+                contentId: 'song-tbody'
+            });
         });
+        //this.setState({library: Noxios});
     }
 
     render()
@@ -35,19 +41,26 @@ class SongTable extends Component
             {
                 var obj = library[key];
                 obj.path = "/api/media/" + obj.path;
-                songRows.push(<SongRow song={obj} audioPlayer={this.audioPlayer}/>);
+                songRows.push(<SongRow song={obj} audioPlayer={this.audioPlayer} key={obj.path}/>);
             }
         }
         return (
-            <div className="song-div">
-                <table className="song-table">
+            <div id="song-div">
+                <table id="song-table">
+                    <thead>
                     <tr>
                         <th>Title</th>
                         <th>Artist</th>
                         <th>Album</th>
                         <th>Length</th>
                     </tr>
+                    </thead>
+                    <tbody id="song-tbody" className="clusterize-content">
+                    <tr className="clusterize-no-data">
+                        <td>Loading...</td>
+                    </tr>
                     { songRows }
+                    </tbody>
                 </table>
             </div>
         );

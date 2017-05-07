@@ -15,6 +15,7 @@ const server = app.listen(port, function ()
 });
 
 app.use(express.static(__dirname + '/build'));
+//app.use('/images' ,express.static(__dirname + '/images'));
 app.use(require('body-parser').json());
 
 /**
@@ -22,7 +23,7 @@ app.use(require('body-parser').json());
  */
 app.get('/' + shutdownKey, function (req, res)
 {
-    var close = 'closing server...';
+    const close = 'closing server...';
     res.status(200).send(close);
     console.log(close);
     server.close(function ()

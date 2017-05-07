@@ -3,6 +3,7 @@
  */
 import React, {Component} from "react";
 import SongInfo from './SongInfo';
+import PlaybackControls from './PlaybackControls';
 
 class MusicInfoControl extends Component
 {
@@ -15,8 +16,9 @@ class MusicInfoControl extends Component
     render()
     {
         return (
-            <div>
-                <SongInfo title="---" artist="---" album="---"/>
+            <div id="music-info-control">
+                <SongInfo title="---" artist="---" album="---" audioPlayer={this.audioPlayer}/>
+                <PlaybackControls audioPlayer={this.audioPlayer}/>
             </div>
         );
     }

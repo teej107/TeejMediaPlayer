@@ -15,7 +15,7 @@ class SongRow extends Component
     render()
     {
         return (
-            <tr onClick={ this.audioPlayer.play.bind(this.audioPlayer, this.state.path) }>
+            <tr onClick={ this.audioPlayer.play.bind(this.audioPlayer, this.state) }>
                 <td> { this.state.title } </td>
                 <td> { this.state.artist } </td>
                 <td> { this.state.album } </td>
