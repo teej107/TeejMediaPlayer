@@ -39,10 +39,20 @@ body
     border: none;
 }
 
+.flip
+{
+    transform: scaleX(-1);
+}
+
 table, th, td
 {
     border: 1px solid lightgray;
     border-collapse: collapse;
+}
+
+.path
+{
+    display: none;
 }
 
 tr:hover

@@ -9,13 +9,12 @@ class SongRow extends Component
     {
         super(props);
         this.state = props.song;
-        this.audioPlayer = props.audioPlayer;
     }
 
     render()
     {
         return (
-            <tr onClick={ this.audioPlayer.play.bind(this.audioPlayer, this.state) }>
+            <tr>
                 <td> { this.state.title } </td>
                 <td> { this.state.artist } </td>
                 <td> { this.state.album } </td>

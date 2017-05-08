@@ -4,7 +4,8 @@
 import React, {Component} from "react";
 import axios from "axios";
 import SongRow from "./SongRow";
-import Clusterize from "clusterize.js";
+import test from "../Test";
+import Clusterize from 'clusterize.js';
 
 class SongTable extends Component
 {
@@ -20,15 +21,42 @@ class SongTable extends Component
 
     componentWillMount()
     {
+        var initCluster = () =>
+        {
+            this.clusterize = new Clusterize({
+                scrollId: 'song-div',
+                contentId: 'song-tbody',
+                callbacks: {
+                    clusterWillChange: function ()
+                    {
+                        console.log("cluster will change");
+                    },
+                    clusterChanged: function ()
+                    {
+                        console.log("cluster changed");
+                    },
+                    scrollingProgress: function (progress)
+                    {
+                        console.log(progress);
+                    }
+                }
+            });
+        };
         axios.get("/api/library").then((response) =>
         {
             this.setState({library: response.data});
-            this.clusterize = new Clusterize({
-                scrollId: 'song-div',
-                contentId: 'song-tbody'
-            });
+            initCluster();
+        }, (failure) =>
+        {
+            this.setState({library: test});
+            initCluster();
         });
-        //this.setState({library: Noxios});
+    }
+
+    onContentIdClick(e)
+    {
+        var song = this.state.library[Object.keys(this.state.library)[e.target.parentElement.rowIndex - 1]];
+        this.audioPlayer.play(song);
     }
 
     render()
@@ -41,7 +69,7 @@ class SongTable extends Component
             {
                 var obj = library[key];
                 obj.path = "/api/media/" + obj.path;
-                songRows.push(<SongRow song={obj} audioPlayer={this.audioPlayer} key={obj.path}/>);
+                songRows.push(<SongRow song={obj} key={obj.path}/>);
             }
         }
         return (
@@ -55,10 +83,7 @@ class SongTable extends Component
                         <th>Length</th>
                     </tr>
                     </thead>
-                    <tbody id="song-tbody" className="clusterize-content">
-                    <tr className="clusterize-no-data">
-                        <td>Loading...</td>
-                    </tr>
+                    <tbody id="song-tbody" className="clusterize-content" onClick={this.onContentIdClick.bind(this)}>
                     { songRows }
                     </tbody>
                 </table>
