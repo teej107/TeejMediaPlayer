@@ -20,7 +20,6 @@ body
 
 #music-info-control
 {
-    position: relative;
     height: 100%;
 }
 
@@ -50,7 +49,13 @@ table, th, td
     border-collapse: collapse;
 }
 
-.path
+.album-art
+{
+    width: 100%;
+    height: auto;
+}
+
+.index
 {
     display: none;
 }

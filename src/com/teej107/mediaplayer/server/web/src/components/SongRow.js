@@ -15,6 +15,7 @@ class SongRow extends Component
     {
         return (
             <tr>
+                <td className="index">{this.props.index}</td>
                 <td> { this.state.title } </td>
                 <td> { this.state.artist } </td>
                 <td> { this.state.album } </td>

@@ -15,7 +15,7 @@ const server = app.listen(port, function ()
 });
 
 app.use(express.static(__dirname + '/build'));
-//app.use('/images' ,express.static(__dirname + '/images'));
+app.use('/api/album', express.static(j_getAlbumArtDirectory()));
 app.use(require('body-parser').json());
 
 /**

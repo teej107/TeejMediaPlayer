@@ -9,13 +9,12 @@ class AudioPlayer
         this.songChangeListeners = [];
     }
 
-
     setSong(song)
     {
         if (!song)
             return false;
         this.song = song;
-        this.mediaPlayer.src = song.path;
+        this.mediaPlayer.src = '/api/media/' + song.path;
         this.songChangeListeners.forEach(function (callback)
         {
            callback(song);

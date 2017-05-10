@@ -45,6 +45,7 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
+		addJavaCallback("j_getAlbumArtDirectory", (JavaCallback) (v8Object, v8Array) -> applicationPreferences.getAlbumArtRootDirectory().toString());
 		addJavaCallback("j_getLibrary", (v8Object, v8Array) ->
 		{
 			Map map = new LinkedHashMap();

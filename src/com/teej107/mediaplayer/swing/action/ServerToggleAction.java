@@ -66,7 +66,7 @@ public class ServerToggleAction extends AbstractAction implements ServerStateLis
 	@Override
 	public void onStart()
 	{
-
+		SwingEDT.invoke(() -> putValue(Action.NAME, "Stop Server"));
 	}
 
 	@Override

@@ -85,7 +85,6 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 		add(save);
 
 		update();
-
 		Util.setChildrenUnfocusable(this);
 	}
 
@@ -126,6 +125,10 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 			{
 				try
 				{
+					if(!mediaServer.isRunning())
+					{
+						mediaServer.start();
+					}
 					desktop.browse(new URI(openInBrowser.getText()));
 				}
 				catch (IOException e1)
@@ -136,6 +139,10 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 				{
 					e1.printStackTrace();
 				}
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Opening in browser is unsupported", "Unsupported", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
