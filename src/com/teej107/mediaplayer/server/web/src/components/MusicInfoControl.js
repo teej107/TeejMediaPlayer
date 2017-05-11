@@ -4,6 +4,7 @@
 import React, {Component} from "react";
 import SongInfo from "./SongInfo";
 import PlaybackControls from "./PlaybackControls";
+import noAlbumArt from '../../../../../../../assets/no-album-art.png'
 
 class MusicInfoControl extends Component
 {
@@ -15,7 +16,7 @@ class MusicInfoControl extends Component
         };
 
         this.audioPlayer = props.audioPlayer;
-        this.audioPlayer.songChangeListeners.push((song) => this.setState({album: "/api/album/" + song.artist + "/" + song.album + ".jpg"}));
+        this.audioPlayer.songChangeListeners.push((song) => this.setState({album: "/api/album/" + song['album art']}));
     }
 
     render()
@@ -23,7 +24,7 @@ class MusicInfoControl extends Component
         return (
             <div id="music-info-control">
                 <SongInfo title="---" artist="---" album="---" audioPlayer={this.audioPlayer}/>
-                <img src={this.state.album}/>
+                <img src={this.state.album} className="album-art"/>
                 <PlaybackControls audioPlayer={this.audioPlayer}/>
             </div>
         );

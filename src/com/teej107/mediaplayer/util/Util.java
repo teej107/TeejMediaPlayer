@@ -41,19 +41,26 @@ public class Util
 
 	public static JSONObject toJSONObject(ISong song, @Nullable String urlPath)
 	{
-		if(urlPath == null)
+		Application app = Application.instance();
+		if (urlPath == null)
 		{
 			Path songPath = Paths.get(song.getURI());
-			urlPath = Application.instance().getApplicationPreferences().getMusicRootDirectory().relativize(songPath).toString();
+			urlPath = app.getApplicationPreferences().getMusicRootDirectory().relativize(songPath).toString();
 		}
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("artist", song.getArtist());
 		jsonObject.put("title", song.getTitle());
 		jsonObject.put("album", song.getAlbum());
 		jsonObject.put("path", urlPath.replace("\\", "/"));
+
+		String albumArt = app.getApplicationPreferences().getAlbumArtRootDirectory()
+				.relativize(app.getAlbumManager().getAlbumCoverPath(song)).toString();
+		jsonObject.put("album art", albumArt.replace("\\", "/"));
 		jsonObject.put("year", song.getYear());
 		jsonObject.put("genre", song.getGenre());
 		jsonObject.put("duration", song.getDuration());
+		//TODO: track no.
 		return jsonObject;
 	}
 

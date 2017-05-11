@@ -12,6 +12,7 @@ public interface ISong
 	String getArtist();
 	String getGenre();
 	String getAlbum();
+	int getTrackNumber();
 	int getYear();
 	long getDuration();
 	Image getArtwork();

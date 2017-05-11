@@ -254,6 +254,15 @@ public class DatabaseManager
 		try
 		{
 			albumByArtist.setString(1, artist);
+			albumByArtist.setString(2, album);
+			ResultSet resultSet = albumByArtist.executeQuery();
+			albumByArtist.clearParameters();
+			while(resultSet.next())
+			{
+				list.add(new DatabaseSong(new Row(resultSet)));
+			}
+			resultSet.close();
+			return list;
 		}
 		catch (SQLException e)
 		{

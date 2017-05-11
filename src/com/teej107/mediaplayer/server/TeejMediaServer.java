@@ -45,16 +45,23 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
-		addJavaCallback("j_getAlbumArt", (JavaCallback) (v8Object, v8Array) ->
+		addJavaCallback("j_getAlbumArt", (v8Object, v8Array) ->
 		{
 			if(v8Array.length() > 1)
 			{
-				//TODO: Check if artist and album exists
-				ISong song = new AlbumFetcherSong(v8Array.getString(0), v8Array.getString(1));
-				Path path = application.getAlbumManager().getAlbumCoverPath(song);
+				String album = v8Array.getString(1);
+				if(album.toLowerCase().endsWith(".jpg"))
+				{
+					album = album.substring(0, album.length() - 4);
+				}
+
+				List<DatabaseSong> list = application.getDatabaseManager().getAlbumByArtist(v8Array.getString(0), album);
+				if(list.size() == 0)
+					return null;
+				Path path = application.getAlbumManager().getAlbumCoverPath(list.get(0));
 				if(!Files.exists(path))
 				{
-					application.getAlbumManager().getAndSaveAlbumCover(song);
+					application.getAlbumManager().getAndSaveAlbumCover(list.get(0));
 				}
 				return path.toString();
 			}

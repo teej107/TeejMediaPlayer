@@ -48,6 +48,12 @@ public class DatabaseSong implements ISong
 	}
 
 	@Override
+	public int getTrackNumber()
+	{
+		return row.getObject("track_number", Integer.class);
+	}
+
+	@Override
 	public int getYear()
 	{
 		return row.getObject("year", Integer.class);

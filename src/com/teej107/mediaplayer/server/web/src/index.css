@@ -62,5 +62,11 @@ table, th, td
 
 tr:hover
 {
-    color: blue;
+    background: linear-gradient(0deg, #0080ed, #008fff);
+    color: #FAFAFA;
+}
+
+td
+{
+    white-space: nowrap;
 }

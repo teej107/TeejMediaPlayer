@@ -32,6 +32,13 @@ module.exports = {
         var artist = req.params.artist;
         var album = req.params.album;
         var albumArt = storage.getAlbumArt(artist, album);
-        res.sendFile(albumArt);
+        if(albumArt)
+        {
+            res.sendFile(albumArt, {root: ''});
+        }
+        else
+        {
+            res.status(404).send("album not found");
+        }
     }
 };
