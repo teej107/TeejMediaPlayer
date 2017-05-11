@@ -26,5 +26,12 @@ module.exports = {
     getLibrary: function (req, res)
     {
         res.send(storage.getLibrary());
+    },
+    getAlbum: function (req, res)
+    {
+        var artist = req.params.artist;
+        var album = req.params.album;
+        var albumArt = storage.getAlbumArt(artist, album);
+        res.sendFile(albumArt);
     }
 };

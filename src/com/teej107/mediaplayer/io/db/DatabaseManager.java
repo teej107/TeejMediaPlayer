@@ -21,7 +21,7 @@ public class DatabaseManager
 	private AlbumManager albumManager;
 	private Path path;
 	private Connection connection;
-	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI;
+	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI, albumByArtist;
 	private int version;
 	private Collection<CommitListener> commitListeners;
 
@@ -66,6 +66,7 @@ public class DatabaseManager
 			musicInfo = connection.prepareStatement(readSql(version, "get-music-info"));
 			addToLibrary = connection.prepareStatement(readSql(version, "add-to-library"));
 			songByURI = connection.prepareStatement(readSql(version, "get-song-by-uri"));
+			albumByArtist = connection.prepareStatement(readSql(version, "get-album-by-artist"));
 		}
 		catch (URISyntaxException | IOException e)
 		{
@@ -245,6 +246,20 @@ public class DatabaseManager
 			e.printStackTrace();
 			return new ArrayList<>();
 		}
+	}
+
+	public List<DatabaseSong> getAlbumByArtist(String artist, String album)
+	{
+		List<DatabaseSong> list = new ArrayList<>();
+		try
+		{
+			albumByArtist.setString(1, artist);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	public List<DatabaseSong> getLibrary()

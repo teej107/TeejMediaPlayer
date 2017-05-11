@@ -13,5 +13,9 @@ module.exports = {
     getLibrary: function ()
     {
         return JSON.parse(j_getLibrary());
+    },
+    getAlbumArt: function (artist, album)
+    {
+        return j_getAlbumArt(artist, album);
     }
 };
