@@ -205,7 +205,7 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 		try
 		{
 			InetAddress inetAddress = InetAddress.getLocalHost();
-			address = inetAddress.getHostAddress();
+			address = inetAddress.getCanonicalHostName();
 		}
 		catch (UnknownHostException e)
 		{

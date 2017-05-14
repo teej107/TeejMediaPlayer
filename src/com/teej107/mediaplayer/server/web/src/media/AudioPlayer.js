@@ -17,7 +17,7 @@ class AudioPlayer
         this.mediaPlayer.src = '/api/media/' + song.path;
         this.songChangeListeners.forEach(function (callback)
         {
-           callback(song);
+            callback(song);
         });
         return true;
     }

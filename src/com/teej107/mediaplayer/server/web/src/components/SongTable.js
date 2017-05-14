@@ -61,7 +61,7 @@ class SongTable extends Component
             <div id="song-div">
                 <table id="song-table">
                     <thead>
-                    <tr>
+                    <tr className="thr">
                         <th className="index">Index</th>
                         <th>Title</th>
                         <th>Artist</th>
