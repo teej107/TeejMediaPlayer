@@ -91,21 +91,28 @@ td
 {
     box-sizing: border-box;
     height: 30px;
-    border-radius: 10px;
-    border: 1px solid lightgrey;
     margin: 0 10px;
     margin-bottom: 15px;
-    background: linear-gradient(0deg, #0080ed, #008fff);
+    background: lightgrey;
+    border-radius: 10px;
 }
 
 .close-bar:hover
 {
-    border: 0.5px solid black;
+    background: #e6e6e6;
 }
 
 .close-bar:active
 {
-    background: linear-gradient(0deg, #008fff, #0080ed);
+    background: darkgray;
+}
+
+.close-bar img
+{
+    display: block;
+    height: 100%;
+    width: auto;
+    margin: auto auto;
 }
 
 .hflip

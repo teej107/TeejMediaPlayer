@@ -6,6 +6,7 @@ import SongTable from "./SongTable";
 import Modal from "react-modal";
 import PlaybackControls from './PlaybackControls';
 import TeejAlbum from "../../../../../../../assets/no-album-art.png";
+import UpArrow from '../images/up arrow.svg';
 
 class CurrentlyPlaying extends Component
 {
@@ -52,7 +53,9 @@ class CurrentlyPlaying extends Component
                 <PlaybackControls audioPlayer={this.audioPlayer}/>
 
                 <Modal className="modal" isOpen={this.state.modal} contentLabel="Library">
-                    <div className="close-bar" onClick={this.modalVisible.bind(this, false)}></div>
+                    <div className="close-bar" onClick={this.modalVisible.bind(this, false)}>
+                        <img src={UpArrow}/>
+                    </div>
                     <SongTable audioPlayer={this.audioPlayer}/>
                 </Modal>
             </div>
