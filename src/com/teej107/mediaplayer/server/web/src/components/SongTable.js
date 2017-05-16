@@ -2,7 +2,7 @@
  * Created by Tanner Norton on 5/4/2017.
  */
 import React, {Component} from "react";
-import axios from "axios";
+import Axios from "axios";
 import SongRow from "./SongRow";
 import test from "../Test";
 import Clusterize from 'clusterize.js';
@@ -28,7 +28,7 @@ class SongTable extends Component
                 contentId: 'song-tbody'
             });
         };
-        axios.get("/api/library").then((response) =>
+        Axios.get("/api/library").then((response) =>
         {
             this.setState({library: response.data});
             initCluster();
