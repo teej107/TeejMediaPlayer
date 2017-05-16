@@ -51,12 +51,18 @@ td
 
 #currently-playing
 {
+    overflow: auto;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
     font-size: 18px;
     text-align: center;
     margin: 0 auto;
     width: 600px;
     max-width: 100%;
     height: 100%;
+    box-shadow: -5px 0 7px -5px #333, 5px 0 7px -5px #333;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
 }
 
 #currently-playing > p
@@ -83,8 +89,14 @@ td
     justify-content: space-around;
     flex-wrap: nowrap;
     width: 100%;
-    height: 200px;
-    max-height: 200px;
+    height: auto;
+}
+
+#playback-controls img
+{
+    display: block;
+    width: 33%;
+    height: 33%;
 }
 
 .close-bar

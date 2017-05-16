@@ -14,29 +14,35 @@ class PlaybackControls extends Component
     constructor(props)
     {
         super(props);
+        this.state = {
+            previous: Next,
+            play: Play,
+            next: Next
+        };
         this.audioPlayer = props.audioPlayer;
     }
 
-    style(img, imgPress)
+    changeState(state, value)
     {
-        return {
-            width: '200px',
-            height: '200px',
-            backgroundImage: 'url(' + img + ')',
-            ':active': {
-                backgroundImage: 'url("' + imgPress + '")'
-            }
-        }
+        this.setState({[state]: value});
     }
 
+    initButton(state, def, press)
+    {
+        return {
+            src: def,
+            onMouseDown: this.changeState.bind(this, state, press),
+            onMouseUp: this.changeState.bind(this, state, def)
+        }
+    }
 
     render()
     {
         return (
             <div id="playback-controls">
-                <div className="hflip" style={this.style(Next, NextPress)}/>
-                <div style={this.style(Play, PlayPress)}/>
-                <div style={this.style(Next, NextPress)}/>
+                <img className="hflip" {...this.initButton('previous', Next, NextPress)}/>
+                <img {...this.initButton('play', Play, PlayPress)}/>
+                <img {...this.initButton('next', Next, NextPress)}/>
             </div>
         );
     }
