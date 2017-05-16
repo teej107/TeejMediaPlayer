@@ -24,8 +24,8 @@ class SongTable extends Component
         var initCluster = () =>
         {
             this.clusterize = new Clusterize({
-                scrollId: 'song-div',
-                contentId: 'song-tbody'
+                scrollId: 'song-list',
+                contentId: 'song-list'
             });
         };
         Axios.get("/api/library").then((response) =>
@@ -58,21 +58,8 @@ class SongTable extends Component
             }
         }
         return (
-            <div id="song-div">
-                <table id="song-table">
-                    <thead>
-                    <tr className="thr">
-                        <th className="index">Index</th>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th>Album</th>
-                        <th>Length</th>
-                    </tr>
-                    </thead>
-                    <tbody id="song-tbody" className="clusterize-content" onClick={this.onContentIdClick.bind(this)}>
-                    { songRows }
-                    </tbody>
-                </table>
+            <div id="song-list">
+                {songRows}
             </div>
         );
     }

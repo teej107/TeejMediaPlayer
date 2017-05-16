@@ -40,9 +40,9 @@ class PlaybackControls extends Component
     {
         return (
             <div id="playback-controls">
-                <img className="hflip" {...this.initButton('previous', Next, NextPress)}/>
-                <img {...this.initButton('play', Play, PlayPress)}/>
-                <img {...this.initButton('next', Next, NextPress)}/>
+                <img className="hflip" {...this.initButton('previous', Next, NextPress)} alt="previous"/>
+                <img {...this.initButton('play', Play, PlayPress)} alt="play toggle"/>
+                <img {...this.initButton('next', Next, NextPress)} alt="next"/>
             </div>
         );
     }

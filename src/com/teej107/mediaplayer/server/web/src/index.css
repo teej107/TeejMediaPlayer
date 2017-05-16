@@ -9,44 +9,42 @@ html, body, #root
     background-color: #fafafa;
 }
 
-#song-div
+#song-list
 {
     height: calc(100% - 50px);
     width: 100%;
     overflow: auto;
+    outline: 0;
 }
 
-#song-table
+.song-row
 {
-    height: 100%;
-    width: 100%;
+    box-sizing: border-box;
+    border-top: 1px solid darkgray;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
 }
 
-table, th, td
+.song-row > div p
 {
-    border: 1px solid lightgray;
-    border-collapse: collapse;
+    margin: 4px;
 }
 
-thead tr
+.song-row > div:last-child
 {
-    height: 30px;
+    text-align: right;
+}
+
+.song-row:hover
+{
+    padding: 10px;
+    font-size: 12px;
 }
 
 .index
 {
     display: none;
-}
-
-tr:hover:not(.thr)
-{
-    background: linear-gradient(0deg, #0080ed, #008fff);
-    color: #FAFAFA;
-}
-
-td
-{
-    white-space: nowrap;
 }
 
 #currently-playing
@@ -140,7 +138,7 @@ td
     box-shadow: 0px 4px 4px 2px #b9b9b9;
     background-color: #FAFAFA;
     margin: 10px auto;
-    width: 80%;
+    max-width: 700px;
     height: 90%;
     padding: 20px;
 }

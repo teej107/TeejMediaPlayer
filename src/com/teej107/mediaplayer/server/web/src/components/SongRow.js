@@ -3,24 +3,25 @@
  */
 import React, {Component} from "react";
 
-class SongRow extends Component
-{
-    constructor(props)
-    {
+class SongRow extends Component {
+    constructor(props) {
         super(props);
         this.state = props.song;
     }
 
-    render()
-    {
+    render() {
         return (
-            <tr>
-                <td className="index">{this.props.index}</td>
-                <td> { this.state.title } </td>
-                <td> { this.state.artist } </td>
-                <td> { this.state.album } </td>
-                <td> {this.state.duration} </td>
-            </tr>
+            <div className="song-row">
+                <p className="index">{this.props.index}</p>
+                <div>
+                    <p> { this.state.title } </p>
+                    <p> { this.state.artist } </p>
+                </div>
+                <div>
+                    <p> { this.state.album } </p>
+                    <p> {this.state.duration} </p>
+                </div>
+            </div>
         );
     }
 }
