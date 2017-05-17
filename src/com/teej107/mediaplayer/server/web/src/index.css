@@ -53,6 +53,9 @@ html, body, #root
 
 #currently-playing
 {
+    display: flex;
+    flex-flow: column;
+
     overflow: auto;
     background-color: #FAFAFA;
     box-sizing: border-box;
@@ -76,29 +79,27 @@ html, body, #root
 
 #album-art
 {
-    position: relative;
     width: 100%;
     height: auto;
-    top: 50%;
-    bottom: 50%;
-    right: 0;
-    left: 0;
 }
 
 #playback-controls
 {
+    flex: 1;
     display: flex;
     justify-content: space-around;
     flex-wrap: nowrap;
     width: 100%;
     height: auto;
+    min-height: 100px;
 }
 
 #playback-controls img
 {
-    display: block;
-    width: 33%;
-    height: 33%;
+    display: inline-block;
+    max-width: 33%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .close-bar
