@@ -5,7 +5,7 @@ import React, {Component} from "react";
 import Axios from "axios";
 import SongRow from "./SongRow";
 import test from "../Test";
-import Clusterize from 'clusterize.js';
+import Clusterize from "clusterize.js";
 
 class SongTable extends Component
 {
@@ -13,7 +13,8 @@ class SongTable extends Component
     {
         super(props);
         this.state = {
-            library: []
+            library: [],
+            sort: "Songs"
         };
         this.audioPlayer = props.audioPlayer;
 
@@ -41,8 +42,25 @@ class SongTable extends Component
 
     onContentIdClick(e)
     {
-        var indexElement = e.target.parentElement.getElementsByClassName("index")[0];
-        this.audioPlayer.play(this.state.library[indexElement.innerHTML]);
+        var indexElement = e.target;
+        while (!indexElement.classList.contains("song-row"))
+        {
+            indexElement = indexElement.parentElement;
+        }
+        indexElement = indexElement.firstChild.innerHTML;
+        this.audioPlayer.play(this.state.library[indexElement]);
+    }
+
+    onSortClick(e)
+    {
+        const sort = e.target.innerHTML;
+        this.setState({sort: sort});
+        switch (sort.toLowerCase())
+        {
+            case 'songs':
+                break;
+            case 'artist':
+        }
     }
 
     render()
@@ -58,8 +76,14 @@ class SongTable extends Component
             }
         }
         return (
-            <div id="song-list">
-                {songRows}
+            <div id="song-div">
+                <div id="song-sort-div" onClick={this.onSortClick.bind(this)}>
+                    <button className={this.state.sort === 'Songs' ? 'sort-selected' : null}>Songs</button>
+                    <button className={this.state.sort === 'Artists' ? 'sort-selected' : null}>Artists</button>
+                </div>
+                <div id="song-list" onClick={this.onContentIdClick.bind(this)}>
+                    {songRows}
+                </div>
             </div>
         );
     }

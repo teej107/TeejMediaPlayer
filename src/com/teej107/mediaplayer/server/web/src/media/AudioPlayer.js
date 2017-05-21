@@ -6,6 +6,10 @@ class AudioPlayer
     constructor()
     {
         this.mediaPlayer = new Audio();
+        this.mediaPlayer.addEventListener('ended', function ()
+        {
+
+        }.bind(this));
         this.songChangeListeners = [];
     }
 

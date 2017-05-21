@@ -12,7 +12,7 @@ class SongInfo extends Component
             title: props.title,
             artist: props.artist,
             album: props.album
-        }
+        };
         this.audioPlayer = props.audioPlayer;
         this.audioPlayer.songChangeListeners.push(function (song)
         {
@@ -27,7 +27,7 @@ class SongInfo extends Component
     render()
     {
         return (
-            <div>
+            <div id="song-info">
                 <p>{ this.state.title }</p>
                 <p>{ this.state.artist }</p>
                 <p>{ this.state.album }</p>

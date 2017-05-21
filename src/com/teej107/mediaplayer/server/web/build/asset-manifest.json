@@ -1,13 +1,14 @@
 {
-  "main.css": "static/css/main.da8cae06.css",
-  "main.css.map": "static/css/main.da8cae06.css.map",
-  "main.js": "static/js/main.c0e89793.js",
-  "main.js.map": "static/js/main.c0e89793.js.map",
-  "static/media/next press.png": "static/media/next press.08fc2247.png",
-  "static/media/next.png": "static/media/next.c3799e53.png",
-  "static/media/no-album-art.png": "static/media/no-album-art.02abba08.png",
-  "static/media/pause press.png": "static/media/pause press.a72d442c.png",
-  "static/media/pause.png": "static/media/pause.be319cd3.png",
-  "static/media/play press.png": "static/media/play press.2363c70c.png",
-  "static/media/play.png": "static/media/play.40c99c8f.png"
+  "main.css": "static/css/main.e3b279b4.css",
+  "main.css.map": "static/css/main.e3b279b4.css.map",
+  "main.js": "static/js/main.88e82481.js",
+  "main.js.map": "static/js/main.88e82481.js.map",
+  "static\\media\\next press.png": "static/media/next press.08fc2247.png",
+  "static\\media\\next.png": "static/media/next.c3799e53.png",
+  "static\\media\\no-album-art.png": "static/media/no-album-art.02abba08.png",
+  "static\\media\\pause press.png": "static/media/pause press.a72d442c.png",
+  "static\\media\\pause.png": "static/media/pause.be319cd3.png",
+  "static\\media\\play press.png": "static/media/play press.2363c70c.png",
+  "static\\media\\play.png": "static/media/play.40c99c8f.png",
+  "static\\media\\up arrow.svg": "static/media/up arrow.9206eccc.svg"
 }

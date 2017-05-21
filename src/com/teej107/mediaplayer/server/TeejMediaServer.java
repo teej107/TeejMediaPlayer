@@ -4,8 +4,8 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
-import com.teej107.mediaplayer.media.audio.*;
-import com.teej107.mediaplayer.util.*;
+import com.teej107.mediaplayer.util.SwingEDT;
+import com.teej107.mediaplayer.util.Version;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,37 +45,13 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
 		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
+		addJavaCallback("j_getArtists", (JavaCallback) (v8Object, v8Array) -> serverApi.getArtists());
+		addJavaCallback("j_getLibrary", (JavaCallback) (v8Object, v8Array) -> serverApi.getLibraryJSON());
 		addJavaCallback("j_getAlbumArt", (v8Object, v8Array) ->
 		{
-			if(v8Array.length() > 1)
-			{
-				String album = v8Array.getString(1);
-				if(album.toLowerCase().endsWith(".jpg"))
-				{
-					album = album.substring(0, album.length() - 4);
-				}
-
-				List<DatabaseSong> list = application.getDatabaseManager().getAlbumByArtist(v8Array.getString(0), album);
-				if(list.size() == 0)
-					return null;
-				Path path = application.getAlbumManager().getAlbumCoverPath(list.get(0));
-				if(!Files.exists(path))
-				{
-					application.getAlbumManager().getAndSaveAlbumCover(list.get(0));
-				}
-				return path.toString();
-			}
+			if (v8Array.length() > 1)
+				return serverApi.getAlbumArt(v8Array.getString(0), v8Array.getString(1));
 			return null;
-		});
-		addJavaCallback("j_getLibrary", (v8Object, v8Array) ->
-		{
-			Map map = new LinkedHashMap();
-			for (DatabaseSong song : application.getDatabaseManager().getLibrary())
-			{
-				JSONObject songJson = Util.toJSONObject(song);
-				map.put(songJson.get("path"), songJson);
-			}
-			return JSONObject.toJSONString(map);
 		});
 
 		application.addShutdownHook(this, 1410);

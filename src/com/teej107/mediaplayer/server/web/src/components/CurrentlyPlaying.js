@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import PlaybackControls from './PlaybackControls';
 import TeejAlbum from "../../../../../../../assets/no-album-art.png";
 import UpArrow from '../images/up arrow.svg';
+import SongInfo from "./SongInfo";
 
 class CurrentlyPlaying extends Component
 {
@@ -14,7 +15,7 @@ class CurrentlyPlaying extends Component
     {
         super(props);
         this.state = {
-            song: {},
+            album: TeejAlbum,
             modal: false
         };
         this.audioPlayer = props.audioPlayer;
@@ -30,26 +31,23 @@ class CurrentlyPlaying extends Component
     {
         this.setState(
             {
-                song: song,
+                album: 'api/album/' + song['album art'],
                 modal: false
             });
     }
 
-    defaultValue(value, ifFalsey)
+    albumNotFound(e)
     {
-        return value ? value : ifFalsey;
+        e.target.src = TeejAlbum;
     }
-
 
     render()
     {
         return (
             <div id="currently-playing">
-                <p>{this.defaultValue(this.state.song.title, '---')}</p>
-                <p>{this.defaultValue(this.state.song.artist, '---')}</p>
-                <p>{this.defaultValue(this.state.song.album, '---')}</p>
-                <img id="album-art" src={this.defaultValue(this.state.song['album art'], TeejAlbum)}
-                     onClick={this.modalVisible.bind(this, true)}/>
+                <SongInfo audioPlayer={this.audioPlayer} title="---" artist="---" album="---"/>
+                <img id="album-art" src={this.state.album}
+                     onClick={this.modalVisible.bind(this, true)} onError={this.albumNotFound}/>
                 <PlaybackControls audioPlayer={this.audioPlayer}/>
 
                 <Modal className="modal" isOpen={this.state.modal} contentLabel="Library">
