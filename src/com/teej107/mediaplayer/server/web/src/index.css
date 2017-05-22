@@ -40,7 +40,8 @@ html, body, #root
 {
     font-size: 16px;
     color: darkgrey;
-    box-shadow: inset 0px 0px 2px 1px #b9b9b9;
+    border-color: #008fff;
+    box-shadow: inset 0px 0px 2px 1px #008fff;
 }
 
 #song-sort-div > button:hover
