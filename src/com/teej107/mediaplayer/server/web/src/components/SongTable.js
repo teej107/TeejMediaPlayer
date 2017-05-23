@@ -6,15 +6,23 @@ import Axios from "axios";
 import SongRow from "./SongRow";
 import test from "../Test";
 import Clusterize from "clusterize.js";
+import SongSort from "../media/SongSort";
 
 class SongTable extends Component
 {
     constructor(props)
     {
         super(props);
+        this.songSorts = {};
+        var toSongSorts = (...sort) =>
+        {
+            sort.forEach((e) => this.songSorts[e.getSortName()] = e);
+        };
+        toSongSorts(new SongSort("Songs", SongSort.sortBy("title")), new SongSort("Artists", SongSort.sortBy("artist")));
+
         this.state = {
             library: [],
-            sort: "Songs"
+            sort: this.songSorts.Songs
         };
         this.audioPlayer = props.audioPlayer;
 
@@ -54,13 +62,13 @@ class SongTable extends Component
     onSortClick(e)
     {
         const sort = e.target.innerHTML;
-        this.setState({sort: sort});
-        switch (sort.toLowerCase())
-        {
-            case 'songs':
-                break;
-            case 'artist':
-        }
+        const songSort = this.songSorts[sort];
+        const newLib = songSort.getCallback()(this.state.library);
+        console.log(newLib);
+        this.setState({
+            sort: songSort,
+            library: songSort.getCallback()(this.state.library)
+        });
     }
 
     render()
@@ -78,8 +86,8 @@ class SongTable extends Component
         return (
             <div id="song-div">
                 <div id="song-sort-div" onClick={this.onSortClick.bind(this)}>
-                    <button className={this.state.sort === 'Songs' ? 'sort-selected' : null}>Songs</button>
-                    <button className={this.state.sort === 'Artists' ? 'sort-selected' : null}>Artists</button>
+                    <button className={this.state.sort.getSortName() === 'Songs' ? 'sort-selected' : null}>Songs</button>
+                    <button className={this.state.sort.getSortName() === 'Artists' ? 'sort-selected' : null}>Artists</button>
                 </div>
                 <div id="song-list" onClick={this.onContentIdClick.bind(this)}>
                     {songRows}
