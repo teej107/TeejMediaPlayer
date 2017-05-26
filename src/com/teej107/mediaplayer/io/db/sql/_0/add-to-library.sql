@@ -1,1 +1,1 @@
-INSERT INTO music (uri, title, artist, album, year, duration_sec) VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO music (uri, title, artist, album, year, track_number, duration_sec) VALUES (?, ?, ?, ?, ?, ?, ?)

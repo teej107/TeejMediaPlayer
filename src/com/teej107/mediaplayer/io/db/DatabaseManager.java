@@ -2,6 +2,7 @@ package com.teej107.mediaplayer.io.db;
 
 import com.teej107.mediaplayer.io.AlbumManager;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
+import com.teej107.mediaplayer.util.Util;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -160,23 +161,18 @@ public class DatabaseManager
 			}
 			String artist = tag.getFirst(FieldKey.ARTIST);
 			String album = tag.getFirst(FieldKey.ALBUM);
+			String trackNum = tag.getFirst(FieldKey.TRACK);
 			String yearStr = tag.getFirst(FieldKey.YEAR);
-			int year = 0;
-			try
-			{
-				year = Integer.parseInt(yearStr);
-			}
-			catch (NumberFormatException e)
-			{
-
-			}
+			int track = Util.toInt(trackNum, 0);
+			int year = Util.toInt(yearStr, 0);
 			int duration = f.getAudioHeader().getTrackLength();
 			addToLibrary.setString(1, uri.toString());
 			addToLibrary.setString(2, title);
 			addToLibrary.setString(3, artist);
 			addToLibrary.setString(4, album);
 			addToLibrary.setInt(5, year);
-			addToLibrary.setInt(6, duration);
+			addToLibrary.setInt(6, track);
+			addToLibrary.setInt(7, duration);
 			addToLibrary.execute();
 			addToLibrary.clearParameters();
 		}

@@ -34,18 +34,33 @@ class SongTable extends Component
         {
             this.clusterize = new Clusterize({
                 scrollId: 'song-list',
-                contentId: 'song-list'
+                contentId: 'song-list',
+                show_no_data_row: false
             });
         };
         Axios.get("/api/library").then((response) =>
         {
-            this.setState({library: response.data});
+            console.log(response.data);
+            this.setState({library: this.libraryToArray(response.data)});
             initCluster();
         }, (failure) =>
         {
-            this.setState({library: test});
+            this.setState({library: this.libraryToArray(test)});
             initCluster();
         });
+    }
+
+    libraryToArray(library)
+    {
+        var arr = [];
+        for (var e in library)
+        {
+            if (library.hasOwnProperty(e))
+            {
+                arr.push(library[e]);
+            }
+        }
+        return arr;
     }
 
     onContentIdClick(e)
@@ -63,11 +78,11 @@ class SongTable extends Component
     {
         const sort = e.target.innerHTML;
         const songSort = this.songSorts[sort];
-        const newLib = songSort.getCallback()(this.state.library);
-        console.log(newLib);
+        songSort.getCallback()(this.state.library);
+        this.clusterize.update();
         this.setState({
             sort: songSort,
-            library: songSort.getCallback()(this.state.library)
+            library: this.state.library
         });
     }
 
@@ -75,14 +90,8 @@ class SongTable extends Component
     {
         const library = this.state.library;
         const songRows = [];
-        for (var key in library)
-        {
-            if (library.hasOwnProperty(key))
-            {
-                var obj = library[key];
-                songRows.push(<SongRow song={obj} key={obj.path} index={obj.path}/>);
-            }
-        }
+        library.forEach((obj) => songRows.push(<SongRow song={obj} key={obj.path} index={obj.path}/>));
+
         return (
             <div id="song-div">
                 <div id="song-sort-div" onClick={this.onSortClick.bind(this)}>

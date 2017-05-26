@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS music
   artist TEXT,
   album TEXT,
   year INT,
+  track_number INT,
   duration_sec INT
 )

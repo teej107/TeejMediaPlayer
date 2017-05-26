@@ -57,10 +57,10 @@ public class Util
 		String albumArt = app.getApplicationPreferences().getAlbumArtRootDirectory()
 				.relativize(app.getAlbumManager().getAlbumCoverPath(song)).toString();
 		jsonObject.put("album art", albumArt.replace("\\", "/"));
+		jsonObject.put("track number", song.getTrackNumber());
 		jsonObject.put("year", song.getYear());
 		jsonObject.put("genre", song.getGenre());
 		jsonObject.put("duration", song.getDuration());
-		//TODO: track no.
 		return jsonObject;
 	}
 
@@ -78,6 +78,18 @@ public class Util
 			{
 				setChildrenUnfocusable((JComponent) child);
 			}
+		}
+	}
+
+	public static int toInt(String s, int def)
+	{
+		try
+		{
+			return Integer.parseInt(s);
+		}
+		catch (NumberFormatException e)
+		{
+			return def;
 		}
 	}
 }

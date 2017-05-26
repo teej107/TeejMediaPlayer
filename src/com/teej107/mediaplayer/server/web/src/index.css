@@ -29,14 +29,10 @@ html, body, #root
     background-color: #FAFAFA;
     border: 1px solid darkgrey;
     font-weight: bold;
-}
-
-#song-sort-div > button:not(.sort-selected)
-{
     font-size: 18px;
 }
 
-.sort-selected
+#song-sort-div > .sort-selected
 {
     font-size: 16px;
     color: darkgrey;

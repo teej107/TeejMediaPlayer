@@ -13,21 +13,19 @@ class SongSort
     {
         return function (library)
         {
-            const newLib = {};
-            Object.keys(library).sort((a, b) =>
+            library.sort((a, b) =>
             {
-                a = library[a][property].toUpperCase();
-                b = library[b][property].toUpperCase();
-                if (a > b)
+                if(a[property] > b[property])
                     return 1;
-                if (a < b)
+                if(a[property] < b[property])
                     return -1;
+
+                if(property === 'title')
+                {
+
+                }
                 return 0;
-            }).forEach((e) =>
-            {
-                newLib[e] = library[e];
             });
-            return newLib;
         }
     }
 }
