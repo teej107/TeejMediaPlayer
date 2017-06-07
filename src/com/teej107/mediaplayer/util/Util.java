@@ -8,8 +8,8 @@ import org.json.simple.JSONObject;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -91,5 +91,19 @@ public class Util
 		{
 			return def;
 		}
+	}
+
+	public static Response delete(Path path)
+	{
+		try
+		{
+			Files.delete(path);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return Response.createErrorResponse(e.getMessage());
+		}
+		return Response.createOkResponse();
 	}
 }

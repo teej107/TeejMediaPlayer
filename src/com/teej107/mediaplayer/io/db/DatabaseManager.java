@@ -19,7 +19,6 @@ import java.util.*;
  */
 public class DatabaseManager
 {
-	private AlbumManager albumManager;
 	private Path path;
 	private Connection connection;
 	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI, albumByArtist, artists;
@@ -29,7 +28,6 @@ public class DatabaseManager
 	public DatabaseManager(Path path) throws IOException
 	{
 		this.path = path;
-		this.albumManager = albumManager;
 		this.commitListeners = new HashSet<>();
 		try
 		{
@@ -85,6 +83,11 @@ public class DatabaseManager
 	{
 		URL url = DatabaseManager.class.getResource(getSqlDir(version) + "/" + name + ".sql");
 		return new String(Files.readAllBytes(Paths.get(url.toURI())));
+	}
+
+	public Path getPath()
+	{
+		return path;
 	}
 
 	public boolean addCommitListener(CommitListener listener)

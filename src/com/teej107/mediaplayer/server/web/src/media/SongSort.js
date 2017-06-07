@@ -3,12 +3,6 @@
  */
 class SongSort
 {
-    constructor(name, callback)
-    {
-        this.getSortName = () => name;
-        this.getCallback = () => callback;
-    }
-
     static sortBy(property)
     {
         return function (library)
@@ -20,12 +14,19 @@ class SongSort
                 if(a[property] < b[property])
                     return -1;
 
-                if(property === 'title')
-                {
-
-                }
                 return 0;
             });
+            return library;
+        }
+    }
+
+    static viewBy(property)
+    {
+        return function (library)
+        {
+            var set = new Set();
+            library.forEach((e) => set.add(e[property]));
+            return Array.from(set).sort();
         }
     }
 }

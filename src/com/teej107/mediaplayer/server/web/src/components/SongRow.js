@@ -3,26 +3,37 @@
  */
 import React, {Component} from "react";
 
-class SongRow extends Component {
-    constructor(props) {
+class SongRow extends Component
+{
+    constructor(props)
+    {
         super(props);
-        this.state = props.song;
+        this.song = props.song;
+        this.index = props.index;
     }
 
-    render() {
+    render()
+    {
         return (
-            <div className="song-row">
-                <p className="index">{this.props.index}</p>
+            <div className="row song-row">
+                <index>{this.index}</index>
                 <div>
-                    <p> { this.state.title } </p>
-                    <p> { this.state.artist } </p>
+                    <p> { this.song.title } </p>
+                    <p> { this.song.artist } </p>
                 </div>
                 <div>
-                    <p> { this.state.album } </p>
-                    <p> {this.state.duration} </p>
+                    <p> { this.song.album } </p>
+                    <p> { SongRow.formatDuration(this.song.duration) } </p>
                 </div>
             </div>
         );
+    }
+
+    static formatDuration(duration)
+    {
+        var date = new Date(null);
+        date.setSeconds(duration);
+        return date.toISOString().substr(14, 5);
     }
 }
 

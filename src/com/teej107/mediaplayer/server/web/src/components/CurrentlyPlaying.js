@@ -2,7 +2,7 @@
  * Created by Tanner Norton on 5/12/2017.
  */
 import React, {Component} from "react";
-import SongTable from "./SongTable";
+import SongTable from "./ViewList";
 import Modal from "react-modal";
 import PlaybackControls from './PlaybackControls';
 import TeejAlbum from "../../../../../../../assets/no-album-art.png";
@@ -20,6 +20,8 @@ class CurrentlyPlaying extends Component
         };
         this.audioPlayer = props.audioPlayer;
         this.audioPlayer.songChangeListeners.push(this.onSongChange.bind(this));
+
+        this.viewList = props.viewlist;
     }
 
     modalVisible(bool)
@@ -51,10 +53,10 @@ class CurrentlyPlaying extends Component
                 <PlaybackControls audioPlayer={this.audioPlayer}/>
 
                 <Modal className="modal" isOpen={this.state.modal} contentLabel="Library">
-                    <div className="close-bar" onClick={this.modalVisible.bind(this, false)}>
+                    <div className="close-bar clickable" onClick={this.modalVisible.bind(this, false)}>
                         <img src={UpArrow}/>
                     </div>
-                    <SongTable audioPlayer={this.audioPlayer}/>
+                    {this.viewList}
                 </Modal>
             </div>
         );

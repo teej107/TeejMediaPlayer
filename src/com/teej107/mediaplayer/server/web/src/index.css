@@ -14,51 +14,12 @@ html, body, #root
     height: calc(100% - 100px);
 }
 
-#song-sort-div
-{
-    display: flex;
-    height: 50px;
-    width: 100%;
-}
-
-#song-sort-div > button
-{
-    box-sizing: border-box;
-    width: 50%;
-    outline: 0;
-    background-color: #FAFAFA;
-    border: 1px solid darkgrey;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-#song-sort-div > .sort-selected
-{
-    font-size: 16px;
-    color: darkgrey;
-    border-color: #008fff;
-    box-shadow: inset 0px 0px 2px 1px #008fff;
-}
-
-#song-sort-div > button:hover
-{
-    color: darkgrey;
-}
-
 #song-list
 {
     height: 100%;
     width: 100%;
     overflow: auto;
     outline: 0;
-}
-
-.song-row
-{
-    box-sizing: border-box;
-    border-top: 1px solid darkgray;
-    display: flex;
-    justify-content: space-between;
 }
 
 .song-row > div p
@@ -71,18 +32,28 @@ html, body, #root
     text-align: right;
 }
 
-.song-row:hover
-{
-    background: linear-gradient(0deg, #0080ed, #008fff);
-    color: #FAFAFA;
-}
-
 .song-row > div:last-child:first-child
 {
     font-size: 24px;
 }
 
-.index
+.row
+{
+    box-sizing: border-box;
+    border-top: 1px solid darkgray;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.row:hover
+{
+    background: linear-gradient(0deg, #0080ed, #008fff);
+    color: #FAFAFA;
+}
+
+index
 {
     display: none;
 }
@@ -141,6 +112,18 @@ html, body, #root
     object-fit: contain;
 }
 
+#song-div-back
+{
+    height: 40px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#song-div-back.active
+{
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.3);
+}
+
 .close-bar
 {
     box-sizing: border-box;
@@ -152,17 +135,7 @@ html, body, #root
     border-radius: 10px;
 }
 
-.close-bar:hover
-{
-    background: #e6e6e6;
-}
-
-.close-bar:active
-{
-    background: darkgray;
-}
-
-.close-bar img
+.clickable img
 {
     display: block;
     height: 100%;
@@ -170,9 +143,24 @@ html, body, #root
     margin: auto auto;
 }
 
+.clickable:hover
+{
+    background: #e6e6e6;
+}
+
+.clickable:active
+{
+    background: darkgray;
+}
+
 .hflip
 {
     transform: scaleX(-1);
+}
+
+#song-div-back img
+{
+    transform: rotate(-90deg) scaleY(1.6) scale(0.6);
 }
 
 .modal
