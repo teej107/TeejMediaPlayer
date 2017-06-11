@@ -48,7 +48,7 @@ public class CounterFileVisitor extends SimpleFileVisitor<Path>
 		count++;
 		if(listener != null)
 		{
-			listener.onProgressChange(count);
+			listener.onProgressChange(0, count, count);
 		}
 		return super.visitFile(file, attrs);
 	}

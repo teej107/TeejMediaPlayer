@@ -37,6 +37,9 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 		this.applicationPanel = new ApplicationPanel();
 		setContentPane(applicationPanel);
 
+		application.getMediaServer().addServerStateListener(applicationPanel.getStatusBar());
+		application.getMediaServer().addInstallProgressListener(applicationPanel.getStatusBar());
+
 		try
 		{
 			Image image = ImageUtil.ratioHeight(ImageIO.read(getClass().getResource("/assets/icon.png")), 128);

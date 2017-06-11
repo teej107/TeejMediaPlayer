@@ -2,12 +2,13 @@
  * Created by Tanner Norton on 5/12/2017.
  */
 import React, {Component} from "react";
-import SongTable from "./ViewList";
 import Modal from "react-modal";
-import PlaybackControls from './PlaybackControls';
 import TeejAlbum from "../../../../../../../assets/no-album-art.png";
 import UpArrow from '../images/up arrow.svg';
 import SongInfo from "./SongInfo";
+import DurationSlider from "./DurationSlider";
+import ViewList from "./ViewList";
+import PlaybackControls from "./PlaybackControls";
 
 class CurrentlyPlaying extends Component
 {
@@ -19,40 +20,38 @@ class CurrentlyPlaying extends Component
             modal: false
         };
         this.audioPlayer = props.audioPlayer;
-        this.audioPlayer.songChangeListeners.push(this.onSongChange.bind(this));
-
-        this.viewList = props.viewlist;
+        this.audioPlayer.songChangeListeners.push(this.onSongChange);
+        this.viewList = <ViewList navigator={props.navigator} audioPlayer={this.audioPlayer} hideModal={this.modalVisible.bind(this, false)}/>
     }
 
-    modalVisible(bool)
+    modalVisible = (bool) =>
     {
         this.setState({modal: bool});
-    }
+    };
 
-    onSongChange(song)
+    onSongChange = (song) =>
     {
         this.setState(
             {
-                album: 'api/album/' + song['album art'],
-                modal: false
+                album: song.hasOwnProperty('album art') ? 'api/album/' + song['album art'] : TeejAlbum
             });
-    }
+    };
 
-    albumNotFound(e)
+    albumNotFound = (e) =>
     {
         e.target.src = TeejAlbum;
-    }
+    };
 
     render()
     {
         return (
             <div id="currently-playing">
-                <SongInfo audioPlayer={this.audioPlayer} title="---" artist="---" album="---"/>
+                <SongInfo audioPlayer={this.audioPlayer}/>
+                <DurationSlider audioPlayer={this.audioPlayer}/>
                 <img id="album-art" src={this.state.album}
                      onClick={this.modalVisible.bind(this, true)} onError={this.albumNotFound}/>
                 <PlaybackControls audioPlayer={this.audioPlayer}/>
-
-                <Modal className="modal" isOpen={this.state.modal} contentLabel="Library">
+                <Modal className="modal" overlayClassName="modal-overlay" isOpen={this.state.modal} contentLabel="Library">
                     <div className="close-bar clickable" onClick={this.modalVisible.bind(this, false)}>
                         <img src={UpArrow}/>
                     </div>

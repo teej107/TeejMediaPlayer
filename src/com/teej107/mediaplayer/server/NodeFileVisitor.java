@@ -49,7 +49,7 @@ public class NodeFileVisitor extends SimpleFileVisitor<Path>
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 	{
 		Files.copy(file, root.resolve(sourcePath.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
-		listener.onProgressChange(++progress);
+		listener.onProgressChange(0, ++progress, progress);
 		return FileVisitResult.CONTINUE;
 	}
 }

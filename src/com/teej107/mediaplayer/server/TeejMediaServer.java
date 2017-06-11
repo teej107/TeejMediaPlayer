@@ -4,8 +4,7 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
-import com.teej107.mediaplayer.util.SwingEDT;
-import com.teej107.mediaplayer.util.Version;
+import com.teej107.mediaplayer.util.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,7 +32,7 @@ public class TeejMediaServer implements Runnable
 	public TeejMediaServer(Application application)
 	{
 		this.applicationPreferences = application.getApplicationPreferences();
-		this.runtime = new NodeRuntime(this, applicationPreferences.getServerRootDirectory(), false);
+		this.runtime = new NodeRuntime(this, applicationPreferences.getServerRootDirectory());
 		this.serverApi = new ServerApi(application);
 		this.javaCallbacks = new HashMap<>();
 		this.javaVoidCallbacks = new HashMap<>();
@@ -172,6 +171,11 @@ public class TeejMediaServer implements Runnable
 	public boolean addServerStateListener(ServerStateListener listener)
 	{
 		return serverStateListeners.add(listener);
+	}
+
+	public boolean addInstallProgressListener(ProgressListener listener)
+	{
+		return runtime.addInstallProgressListener(listener);
 	}
 
 	@Override

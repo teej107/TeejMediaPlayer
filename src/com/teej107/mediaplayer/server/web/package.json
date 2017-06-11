@@ -1,6 +1,6 @@
 {
   "name": "teej-media-server",
-  "version": "0.1.5a",
+  "version": "0.9.0",
   "description": "Media server in node.js",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "axios": "^0.16.1",
     "body-parser": "^1.17.1",
     "clusterize.js": "^0.17.6",
+    "cors": "^2.8.3",
     "express": "^4.15.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

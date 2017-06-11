@@ -13,6 +13,7 @@ class ViewList extends Component
         this.audioPlayer = props.audioPlayer;
         this.navigator = props.navigator;
         this.viewHistory = this.navigator.viewHistory;
+        this.hideModal = props.hideModal;
         this.state = {
             library: [],
             backClass: (bool) => bool ? "clickable" : "clickable active"
@@ -36,7 +37,7 @@ class ViewList extends Component
         if (historyFn instanceof Function)
         {
             var result = historyFn();
-            var obj = result.hasOwnProperty("search") ? result.search : null;
+            var obj = result.search ? result.search : null;
             this.setState({library: this.navigator.search(result.view, obj)});
         }
     }
@@ -63,7 +64,11 @@ class ViewList extends Component
         var index = target.getElementsByTagName("index")[0].innerHTML;
         if (target.classList.contains("song-row"))
         {
-            this.audioPlayer.play(this.state.library[index].props.song);
+            var playlist = this.state.library.map((e) => e.props.song);
+            this.audioPlayer.playlist.setPlaylist(playlist);
+            this.audioPlayer.playlist.setIndex(index);
+            this.audioPlayer.play(playlist[index]);
+            this.hideModal();
         }
         else
         {
@@ -74,11 +79,9 @@ class ViewList extends Component
             else
             {
                 var current = this.viewHistory.current();
-                var search = current.search ? current.search : {};
                 var nextView = this.navigator.key(current.view);
+                var search = current.search ? Object.assign({}, current.search) : {};
                 search[current.view] = index;
-                console.log("current:", current.view, current);
-                console.log("next:", nextView, search);
                 this.updateView(this.viewHistory.up.bind(this.viewHistory, nextView, search));
             }
 

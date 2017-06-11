@@ -22,10 +22,14 @@ public class SwingEDT
 			{
 				SwingUtilities.invokeAndWait(runnable);
 			}
-			catch (InterruptedException | InvocationTargetException e)
+			catch (InvocationTargetException e)
 			{
 				e.printStackTrace();
 				return false;
+			}
+			catch (InterruptedException e)
+			{
+
 			}
 		}
 		return true;

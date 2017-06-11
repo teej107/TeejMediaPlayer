@@ -2,26 +2,22 @@
  * Created by Tanner Norton on 4/30/2017.
  */
 import React, {Component} from "react";
+import AudioPlayer from '../media/AudioPlayer';
 
 class SongInfo extends Component
 {
     constructor(props)
     {
         super(props);
-        this.state = {
-            title: props.title,
-            artist: props.artist,
-            album: props.album
-        };
-        this.audioPlayer = props.audioPlayer;
-        this.audioPlayer.songChangeListeners.push(function (song)
+        props.audioPlayer.songChangeListeners.push((song) =>
         {
             this.setState({
                 title: song.title,
                 artist: song.artist,
                 album: song.album
             })
-        }.bind(this));
+        });
+        this.state = AudioPlayer.noSong();
     }
 
     render()

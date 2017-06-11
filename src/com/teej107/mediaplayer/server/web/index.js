@@ -6,6 +6,7 @@ const shutdownKey = j_shutdownKey();
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const apiController = require('./apiController');
 
 const server = app.listen(port, function ()
@@ -14,6 +15,7 @@ const server = app.listen(port, function ()
     console.log("Shutdown Key:", shutdownKey);
 });
 
+app.use(cors());
 app.use(express.static(__dirname + '/build'));
 app.use(require('body-parser').json());
 

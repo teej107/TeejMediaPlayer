@@ -2,6 +2,7 @@
  * Created by Tanner Norton on 5/4/2017.
  */
 import React, {Component} from "react";
+import AudioPlayer from '../media/AudioPlayer';
 
 class SongRow extends Component
 {
@@ -23,17 +24,10 @@ class SongRow extends Component
                 </div>
                 <div>
                     <p> { this.song.album } </p>
-                    <p> { SongRow.formatDuration(this.song.duration) } </p>
+                    <p> { AudioPlayer.formatDuration(this.song.duration) } </p>
                 </div>
             </div>
         );
-    }
-
-    static formatDuration(duration)
-    {
-        var date = new Date(null);
-        date.setSeconds(duration);
-        return date.toISOString().substr(14, 5);
     }
 }
 

@@ -5,5 +5,5 @@ package com.teej107.mediaplayer.util;
  */
 public interface ProgressListener
 {
-	void onProgressChange(int progress);
+	void onProgressChange(int min, int value, int max);
 }

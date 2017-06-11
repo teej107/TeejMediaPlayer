@@ -1,17 +1,15 @@
 package com.teej107.mediaplayer.server;
 
 import com.eclipsesource.v8.*;
-import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.CounterFileVisitor;
-import com.teej107.mediaplayer.swing.ApplicationStatusBar;
-import com.teej107.mediaplayer.util.SwingEDT;
+import com.teej107.mediaplayer.util.ProgressListener;
 import com.teej107.mediaplayer.util.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
 import java.nio.file.*;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by teej107 on 4/22/17.
@@ -24,18 +22,21 @@ public class NodeRuntime implements Runnable
 	private File indexjs;
 	private volatile boolean isCopying, stopping;
 	private volatile String shutdownKey;
+	private Collection<ProgressListener> installProgressListener;
 
-	public NodeRuntime(TeejMediaServer mediaServer, Path root, boolean copy)
+	public NodeRuntime(TeejMediaServer mediaServer, Path root)
 	{
 		this.mediaServer = mediaServer;
 		this.root = root;
 		this.isCopying = false;
 		this.stopping = false;
-		if (copy)
-		{
-			copyNode();
-		}
+		this.installProgressListener = new HashSet<>();
 		this.indexjs = new File(root.toFile(), "index.js");
+	}
+
+	public boolean addInstallProgressListener(ProgressListener listener)
+	{
+		return installProgressListener.add(listener);
 	}
 
 	public void copyNode()
@@ -46,18 +47,15 @@ public class NodeRuntime implements Runnable
 			URI uri = getClass().getResource("/com/teej107/mediaplayer/server/web").toURI();
 			Path path = Paths.get(uri);
 			CounterFileVisitor counterFileVisitor = new CounterFileVisitor().walk(path);
-			ApplicationStatusBar statusBar = Application.instance().getApplicationFrame().getApplicationStatusBar();
-			SwingEDT.invoke(() ->
-			{
-				statusBar.getProgressBar().setMaximum(counterFileVisitor.getCount());
-				statusBar.getProgressBar().setValue(0);
-				statusBar.getProgressLabel().setText("Installing Server...");
-				statusBar.setProgressVisible(true);
-			});
+			final int maxCount = counterFileVisitor.getCount();
 			Files.walkFileTree(path,
-					new NodeFileVisitor(root, (progress) -> SwingEDT.invoke(() -> statusBar.getProgressBar().setValue(progress))));
-			//Files.walkFileTree(Paths.get(getClass().getResource("/assets/button").toURI()), new CopyToPathVisitor(root.resolve("images")));
-			SwingEDT.invoke(() -> statusBar.setProgressVisible(false));
+					new NodeFileVisitor(root, (min, value, max) ->
+					{
+						for (ProgressListener listener : installProgressListener)
+						{
+							listener.onProgressChange(0, value, maxCount);
+						}
+					}));
 		}
 		catch (URISyntaxException e)
 		{
@@ -111,6 +109,10 @@ public class NodeRuntime implements Runnable
 			connection.setRequestMethod("GET");
 			connection.getResponseCode();
 			connection.getInputStream().close();
+
+			//Force close the thread
+			nodeThread.interrupt();
+
 			while (shutdownKey != null)
 			{
 				Thread.yield();
@@ -127,7 +129,6 @@ public class NodeRuntime implements Runnable
 		catch (IOException e)
 		{
 			System.err.println(e.getMessage());
-			nodeThread.interrupt();
 		}
 		stopping = false;
 		nodeThread = null;
