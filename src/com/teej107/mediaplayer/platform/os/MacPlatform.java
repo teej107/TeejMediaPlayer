@@ -22,4 +22,10 @@ public class MacPlatform implements OSPlatform
 	{
 		return "Quit";
 	}
+
+	@Override
+	public String getLocalAddress()
+	{
+		return Platform.getDefault().getLocalAddress();
+	}
 }

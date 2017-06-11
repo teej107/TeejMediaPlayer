@@ -3,6 +3,8 @@ package com.teej107.mediaplayer.platform;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.platform.os.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -27,6 +29,11 @@ public class Platform implements OSPlatform
 	public static String getHome()
 	{
 		return System.getProperty("user.home");
+	}
+
+	public static OSPlatform getDefault()
+	{
+		return DEFAULT_PLATFORM;
 	}
 
 	public static OSPlatform getPlatform()
@@ -64,5 +71,19 @@ public class Platform implements OSPlatform
 	public String getTerminate()
 	{
 		return "Exit";
+	}
+
+	@Override
+	public String getLocalAddress()
+	{
+		try
+		{
+			return InetAddress.getLocalHost().getHostAddress();
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+			return "localhost";
+		}
 	}
 }

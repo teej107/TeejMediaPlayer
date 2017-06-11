@@ -1,6 +1,7 @@
 package com.teej107.mediaplayer.platform.os;
 
 import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.platform.Platform;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,5 +21,11 @@ public class WindowsPlatform implements OSPlatform
 	public String getTerminate()
 	{
 		return "Exit";
+	}
+
+	@Override
+	public String getLocalAddress()
+	{
+		return Platform.getDefault().getLocalAddress();
 	}
 }

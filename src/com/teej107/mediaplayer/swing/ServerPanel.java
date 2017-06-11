@@ -1,12 +1,12 @@
 package com.teej107.mediaplayer.swing;
 
 import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.server.TeejMediaServer;
 import com.teej107.mediaplayer.swing.action.ServerToggleAction;
 import com.teej107.mediaplayer.swing.components.LabelTextfield;
 import com.teej107.mediaplayer.swing.listener.InstallServerMouseListener;
-import com.teej107.mediaplayer.util.SwingEDT;
-import com.teej107.mediaplayer.util.Util;
+import com.teej107.mediaplayer.util.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -25,7 +25,8 @@ import java.util.concurrent.ExecutorService;
  */
 public class ServerPanel extends JPanel implements MouseListener, DocumentListener
 {
-	private final static String LOCAL_ADDRESS;
+	private static final String LOCAL_ADDRESS = Platform.getPlatform().getLocalAddress();
+
 	private SpringLayout layout;
 
 	private TeejMediaServer mediaServer;
@@ -125,7 +126,7 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 			{
 				try
 				{
-					if(!mediaServer.isRunning())
+					if (!mediaServer.isRunning())
 					{
 						mediaServer.start();
 					}
@@ -197,21 +198,5 @@ public class ServerPanel extends JPanel implements MouseListener, DocumentListen
 	public void changedUpdate(DocumentEvent e)
 	{
 		SwingEDT.invoke(() -> update());
-	}
-
-	static
-	{
-		String address;
-		try
-		{
-			InetAddress inetAddress = InetAddress.getLocalHost();
-			address = inetAddress.getCanonicalHostName();
-		}
-		catch (UnknownHostException e)
-		{
-			e.printStackTrace();
-			address = "http://localhost";
-		}
-		LOCAL_ADDRESS = address;
 	}
 }

@@ -9,4 +9,5 @@ public interface OSPlatform
 {
 	Path getAppDataDirectory();
 	String getTerminate();
+	String getLocalAddress();
 }
