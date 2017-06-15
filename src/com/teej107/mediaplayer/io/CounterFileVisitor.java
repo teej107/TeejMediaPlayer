@@ -37,12 +37,6 @@ public class CounterFileVisitor extends SimpleFileVisitor<Path>
 	}
 
 	@Override
-	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-	{
-		return super.preVisitDirectory(dir, attrs);
-	}
-
-	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 	{
 		count++;

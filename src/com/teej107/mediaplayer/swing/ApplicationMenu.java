@@ -14,7 +14,7 @@ public class ApplicationMenu extends JMenuBar
 	{
 		Application app = Application.instance();
 		add(new JMenuChain("File")
-				.append(new ImportMusicAction(app.getDatabaseManager(), app.getApplicationPreferences()))
+				.append(new ImportMusicAction(app.getDatabaseManager(), app.getApplicationPreferences(), app.getApplicationProgress()))
 				.separator()
 				.append(new ExitAction()));
 		add(new JMenuChain("Edit")

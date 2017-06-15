@@ -1,1 +1,0 @@
-SELECT * FROM music WHERE artist = ? AND album = ?

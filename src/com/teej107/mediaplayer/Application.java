@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer;
 
+import com.teej107.mediaplayer.app.ApplicationProgress;
 import com.teej107.mediaplayer.io.*;
 import com.teej107.mediaplayer.io.db.DatabaseManager;
 import com.teej107.mediaplayer.media.AudioPlayer;
@@ -34,10 +35,12 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 	private TeejMediaServer mediaServer;
 	private AlbumManager albumManager;
 	private ExecutorService threadService;
+	private ApplicationProgress applicationProgress;
 
 	private Application()
 	{
 		this.shutdownHooks = new TreeSet<>(this);
+		this.applicationProgress = new ApplicationProgress();
 		this.applicationPreferences = new ApplicationPreferences(this);
 		this.volumeManager = new VolumeManager(applicationPreferences.getPlayerState().getVolume());
 		this.audioPlayer = new AudioPlayer(volumeManager);
@@ -133,6 +136,11 @@ public class Application implements Comparator<ComparableObject<Runnable>>
 			this.serverDialog = new ServerDialog(this);
 		}
 		return serverDialog;
+	}
+
+	public ApplicationProgress getApplicationProgress()
+	{
+		return applicationProgress;
 	}
 
 	/**

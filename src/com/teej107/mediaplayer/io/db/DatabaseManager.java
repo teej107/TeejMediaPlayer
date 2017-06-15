@@ -1,16 +1,12 @@
 package com.teej107.mediaplayer.io.db;
 
-import com.teej107.mediaplayer.io.AlbumManager;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
-import com.teej107.mediaplayer.util.Util;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
 
 import java.io.IOException;
-import java.net.*;
-import java.nio.file.*;
+import java.net.URI;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
 
@@ -19,16 +15,19 @@ import java.util.*;
  */
 public class DatabaseManager
 {
+	private static final String TABLE_NAME = "music";
+
 	private Path path;
 	private Connection connection;
-	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI, albumByArtist, artists;
-	private int version;
+	private PreparedStatement library, libraryCount, musicInfo, addToLibrary, songByURI, albumByArtist, artists, updateRow;
 	private Collection<CommitListener> commitListeners;
+	private StatementProducer statementProducer;
 
 	public DatabaseManager(Path path) throws IOException
 	{
 		this.path = path;
 		this.commitListeners = new HashSet<>();
+		this.statementProducer = new StatementProducer(TABLE_NAME);
 		try
 		{
 			Class.forName("org.sqlite.JDBC");
@@ -45,44 +44,29 @@ public class DatabaseManager
 	private void init() throws SQLException
 	{
 		Statement statement = connection.createStatement();
-		ResultSet set = statement.executeQuery("PRAGMA USER_VERSION");
-		version = set.getInt(1);
-		try
+		statement.executeUpdate(statementProducer.initializeTable());
+
+		musicInfo = connection.prepareStatement(statementProducer.getTableInfo());
+
+		List<String> columns = getColumnNames();
+		for (Column c : Column.values())
 		{
-			statement.executeUpdate(readSql(version, "init-tables"));
+			if (!columns.contains(c.getDatabaseName()))
+			{
+				c.addColumn(TABLE_NAME, statement);
+			}
 		}
-		catch (IOException | URISyntaxException e)
-		{
-			e.printStackTrace();
-		}
+
+		library = connection.prepareStatement(statementProducer.getLibrary());
+		libraryCount = connection.prepareStatement(statementProducer.getLibraryCount());
+		addToLibrary = connection.prepareStatement(statementProducer.addToLibrary());
+		songByURI = connection.prepareStatement(statementProducer.getSongByURI());
+		albumByArtist = connection.prepareStatement(statementProducer.getAlbumByArtist());
+		artists = connection.prepareStatement(statementProducer.getArtists());
+		//updateRow = connection.prepareStatement(statementProducer.updateRow());
+
 		statement.close();
 		connection.commit();
-
-		try
-		{
-			library = connection.prepareStatement(readSql(version, "get-library"));
-			libraryCount = connection.prepareStatement(readSql(version, "get-library-count"));
-			musicInfo = connection.prepareStatement(readSql(version, "get-music-info"));
-			addToLibrary = connection.prepareStatement(readSql(version, "add-to-library"));
-			songByURI = connection.prepareStatement(readSql(version, "get-song-by-uri"));
-			albumByArtist = connection.prepareStatement(readSql(version, "get-album-by-artist"));
-			artists = connection.prepareStatement(readSql(version, "get-artists"));
-		}
-		catch (URISyntaxException | IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private static String getSqlDir(int version)
-	{
-		return "/com/teej107/mediaplayer/io/db/sql/_" + version;
-	}
-
-	private static String readSql(int version, String name) throws URISyntaxException, IOException
-	{
-		URL url = DatabaseManager.class.getResource(getSqlDir(version) + "/" + name + ".sql");
-		return new String(Files.readAllBytes(Paths.get(url.toURI())));
 	}
 
 	public Path getPath()
@@ -102,14 +86,12 @@ public class DatabaseManager
 			ResultSet countSet = libraryCount.executeQuery();
 			if (countSet.next())
 				return countSet.getInt(1);
-
-			return 0;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return 0;
 		}
+		return 0;
 	}
 
 	public List<String> getColumnNames()
@@ -118,7 +100,7 @@ public class DatabaseManager
 		{
 			ResultSet resultSet = musicInfo.executeQuery();
 			List<String> list = new ArrayList<>();
-			while(resultSet.next())
+			while (resultSet.next())
 			{
 				list.add(resultSet.getString("name"));
 			}
@@ -136,10 +118,10 @@ public class DatabaseManager
 		try
 		{
 			Statement statement = connection.createStatement();
-			statement.execute(readSql(version, "purge-library"));
+			statement.execute(statementProducer.purgeLibrary());
 			connection.commit();
 		}
-		catch (SQLException | IOException | URISyntaxException e)
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -150,34 +132,12 @@ public class DatabaseManager
 		try
 		{
 			AudioFile f = AudioFileIO.read(path.toFile());
-			Tag tag = f.getTag();
-			URI uri = path.toUri();
-			String title = tag.getFirst(FieldKey.TITLE);
-			if(title.isEmpty())
-			{
-				title = Paths.get(uri).getFileName().toString();
-				int index = title.lastIndexOf('.');
-				if(index > -1)
-				{
-					title = title.substring(0, index);
-				}
-			}
-			String artist = tag.getFirst(FieldKey.ARTIST);
-			String album = tag.getFirst(FieldKey.ALBUM);
-			String trackNum = tag.getFirst(FieldKey.TRACK);
-			String yearStr = tag.getFirst(FieldKey.YEAR);
-			int track = Util.toInt(trackNum, 0);
-			int year = Util.toInt(yearStr, 0);
-			int duration = f.getAudioHeader().getTrackLength();
-			addToLibrary.setString(1, uri.toString());
-			addToLibrary.setString(2, title);
-			addToLibrary.setString(3, artist);
-			addToLibrary.setString(4, album);
-			addToLibrary.setInt(5, year);
-			addToLibrary.setInt(6, track);
-			addToLibrary.setInt(7, duration);
-			addToLibrary.execute();
 			addToLibrary.clearParameters();
+			for(Column c : Column.values())
+			{
+				c.setQuery(addToLibrary, path, f);
+			}
+			addToLibrary.execute();
 		}
 		catch (Exception e)
 		{
@@ -192,7 +152,7 @@ public class DatabaseManager
 		try
 		{
 			connection.commit();
-			for(CommitListener listener : commitListeners)
+			for (CommitListener listener : commitListeners)
 			{
 				listener.onCommit();
 			}
@@ -211,7 +171,7 @@ public class DatabaseManager
 			ResultSet resultSet = songByURI.executeQuery();
 			songByURI.clearParameters();
 			DatabaseSong song = null;
-			while(resultSet.next())
+			while (resultSet.next())
 			{
 				song = new DatabaseSong(new Row(resultSet));
 			}
@@ -234,7 +194,7 @@ public class DatabaseManager
 			library.setString(1, order.toString());
 			ResultSet resultSet = library.executeQuery();
 			library.clearParameters();
-			while(resultSet.next())
+			while (resultSet.next())
 			{
 				collection.add(new DatabaseSong(new Row(resultSet)));
 			}
@@ -257,7 +217,7 @@ public class DatabaseManager
 			albumByArtist.setString(2, album);
 			ResultSet resultSet = albumByArtist.executeQuery();
 			albumByArtist.clearParameters();
-			while(resultSet.next())
+			while (resultSet.next())
 			{
 				list.add(new DatabaseSong(new Row(resultSet)));
 			}
@@ -279,9 +239,9 @@ public class DatabaseManager
 	public List<String> getArtists()
 	{
 		List<String> list = new ArrayList<>();
-		try(ResultSet result = artists.executeQuery())
+		try (ResultSet result = artists.executeQuery())
 		{
-			while(result.next())
+			while (result.next())
 			{
 				list.add(result.getString(1));
 			}

@@ -1,7 +1,6 @@
 package com.teej107.mediaplayer.swing;
 
-import com.teej107.mediaplayer.server.ServerStateListener;
-import com.teej107.mediaplayer.util.ProgressListener;
+import com.teej107.mediaplayer.app.ApplicationProgressListener;
 import com.teej107.mediaplayer.util.SwingEDT;
 
 import javax.swing.*;
@@ -10,13 +9,13 @@ import java.awt.*;
 /**
  * Created by teej107 on 4/30/2017.
  */
-public class ApplicationStatusBar extends JPanel implements ServerStateListener, ProgressListener
+public class ApplicationProgressBar extends JPanel implements ApplicationProgressListener
 {
 	private SpringLayout layout;
 	private JProgressBar progressBar;
 	private JLabel progressLabel;
 
-	public ApplicationStatusBar()
+	public ApplicationProgressBar()
 	{
 		this.layout = new SpringLayout();
 		setLayout(layout);
@@ -63,40 +62,31 @@ public class ApplicationStatusBar extends JPanel implements ServerStateListener,
 	}
 
 	@Override
-	public void onProgressChange(int min, int value, int max)
+	public void onMinimumChange(int min)
+	{
+		SwingEDT.invoke(() -> getProgressBar().setMinimum(min));
+
+	}
+
+	@Override
+	public void onValueChange(int value)
+	{
+		SwingEDT.invoke(() -> getProgressBar().setValue(value));
+	}
+
+	@Override
+	public void onMaximumChange(int max)
+	{
+		SwingEDT.invoke(() -> getProgressBar().setMaximum(max));
+	}
+
+	@Override
+	public void onStatusChange(String status)
 	{
 		SwingEDT.invoke(() ->
 		{
-			progressBar.setMaximum(max);
-			progressBar.setValue(value);
+			setProgressVisible(status != null);
+			getProgressLabel().setText(status);
 		});
-	}
-
-	@Override
-	public void onStart()
-	{
-
-	}
-
-	@Override
-	public void onStop()
-	{
-
-	}
-
-	@Override
-	public void onInstalling()
-	{
-		SwingEDT.invoke(() ->
-		{
-			progressLabel.setText("Installing Server...");
-			setProgressVisible(true);
-		});
-	}
-
-	@Override
-	public void onInstalled()
-	{
-		SwingEDT.invoke(() -> setProgressVisible(false));
 	}
 }

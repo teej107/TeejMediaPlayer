@@ -37,8 +37,8 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 		this.applicationPanel = new ApplicationPanel();
 		setContentPane(applicationPanel);
 
-		application.getMediaServer().addServerStateListener(applicationPanel.getStatusBar());
-		application.getMediaServer().addInstallProgressListener(applicationPanel.getStatusBar());
+		application.getMediaServer().addServerStateListener(application.getApplicationProgress());
+		application.getMediaServer().addInstallProgressListener(application.getApplicationProgress());
 
 		try
 		{
@@ -51,11 +51,6 @@ public class ApplicationFrame extends JFrame implements WindowListener, Runnable
 		}
 
 		application.addShutdownHook(this, Integer.MAX_VALUE - 1);
-	}
-
-	public ApplicationStatusBar getApplicationStatusBar()
-	{
-		return applicationPanel.getStatusBar();
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package com.teej107.mediaplayer.swing.selection;
 
 import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.io.db.CommitListener;
 import com.teej107.mediaplayer.io.db.DatabaseManager;
 import com.teej107.mediaplayer.media.AudioPlayer;
+import com.teej107.mediaplayer.util.SwingEDT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.event.MouseListener;
 /**
  * Created by teej107 on 4/21/2017.
  */
-public class SongTable extends JTable implements MouseListener
+public class SongTable extends JTable implements MouseListener, CommitListener
 {
 	private SongTableModel songTableModel;
 
@@ -21,6 +23,7 @@ public class SongTable extends JTable implements MouseListener
 		this.songTableModel = new SongTableModel(databaseManager);
 		setModel(songTableModel);
 		addMouseListener(this);
+		databaseManager.addCommitListener(this);
 	}
 
 	public void refresh()
@@ -63,5 +66,15 @@ public class SongTable extends JTable implements MouseListener
 	public void mouseExited(MouseEvent e)
 	{
 
+	}
+
+	@Override
+	public void onCommit()
+	{
+		SwingEDT.invoke(() ->
+		{
+			this.validate();
+			this.repaint();
+		});
 	}
 }

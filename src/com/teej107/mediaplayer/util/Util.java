@@ -1,7 +1,7 @@
 package com.teej107.mediaplayer.util;
 
-import com.sun.istack.internal.Nullable;
 import com.teej107.mediaplayer.Application;
+import com.teej107.mediaplayer.io.db.Column;
 import com.teej107.mediaplayer.media.audio.ISong;
 import org.json.simple.JSONObject;
 
@@ -9,7 +9,8 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -29,44 +30,18 @@ public class Util
 		return sb.toString();
 	}
 
-	public static String toJSON(ISong song, @Nullable String urlPath)
+	public static JSONObject toJSONObject(ISong song)
 	{
-		return toJSONObject(song, urlPath).toString();
-	}
-
-	public static String toJSON(ISong song)
-	{
-		return toJSON(song, null);
-	}
-
-	public static JSONObject toJSONObject(ISong song, @Nullable String urlPath)
-	{
-		Application app = Application.instance();
-		if (urlPath == null)
-		{
-			Path songPath = Paths.get(song.getURI());
-			urlPath = app.getApplicationPreferences().getMusicRootDirectory().relativize(songPath).toString();
-		}
-
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("artist", song.getArtist());
-		jsonObject.put("title", song.getTitle());
-		jsonObject.put("album", song.getAlbum());
-		jsonObject.put("path", urlPath.replace("\\", "/"));
-
+		for (Column c : Column.values())
+		{
+			c.insertJSON(song, jsonObject);
+		}
+		Application app = Application.instance();
 		String albumArt = app.getApplicationPreferences().getAlbumArtRootDirectory()
 				.relativize(app.getAlbumManager().getAlbumCoverPath(song)).toString();
 		jsonObject.put("album art", albumArt.replace("\\", "/"));
-		jsonObject.put("track number", song.getTrackNumber());
-		jsonObject.put("year", song.getYear());
-		jsonObject.put("genre", song.getGenre());
-		jsonObject.put("duration", song.getDuration());
 		return jsonObject;
-	}
-
-	public static JSONObject toJSONObject(ISong song)
-	{
-		return toJSONObject(song, null);
 	}
 
 	public static void setChildrenUnfocusable(JComponent component)
@@ -105,5 +80,53 @@ public class Util
 			return Response.createErrorResponse(e.getMessage());
 		}
 		return Response.createOkResponse();
+	}
+
+	public static String toString(Object[] array, String delimiter)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++)
+		{
+			sb.append(array[i]);
+			if (delimiter != null && i + 1 < array.length)
+			{
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String repeat(String sequence, int times, String delimiter)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < times; i++)
+		{
+			sb.append(sequence);
+			if (delimiter != null && i + 1 < times)
+			{
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String toHexString(String str)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (char c : str.toCharArray())
+		{
+			sb.append(Integer.toHexString(c));
+		}
+		return sb.toString();
+	}
+
+	public static String fromHexString(String hex)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < hex.length() - 1; i += 2)
+		{
+			sb.append((char) Integer.parseInt(hex.substring(i, (i + 2)), 16));
+		}
+		return sb.toString();
 	}
 }

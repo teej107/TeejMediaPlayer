@@ -16,6 +16,8 @@ import java.util.*;
  */
 public class ServerApi
 {
+	private static final String ALBUM_EXT = ".jpg";
+
 	private Application application;
 
 	public ServerApi(Application application)
@@ -62,11 +64,7 @@ public class ServerApi
 
 	public String getAlbumArt(String artist, String album)
 	{
-		if(album.toLowerCase().endsWith(".jpg"))
-		{
-			album = album.substring(0, album.length() - 4);
-		}
-
+		album = stripAlbumExtension(album);
 		List<DatabaseSong> list = application.getDatabaseManager().getAlbumByArtist(artist, album);
 		if(list.size() == 0)
 			return null;
@@ -78,6 +76,17 @@ public class ServerApi
 		return path.toString();
 	}
 
+	public String getAlbumArtFromHex(String hexArtist, String hexAlbum)
+	{
+		hexAlbum = stripAlbumExtension(hexAlbum);
+		return getAlbumArt(Util.fromHexString(hexArtist), Util.fromHexString(hexAlbum));
+	}
+
+	private static String stripAlbumExtension(String str)
+	{
+		return str.toLowerCase().endsWith(ALBUM_EXT) ? str.substring(0, str.length() - ALBUM_EXT.length()) : str;
+	}
+
 	public String getSongJSON(String urlPath)
 	{
 		URI uri = getSongURI(urlPath);
@@ -87,7 +96,7 @@ public class ServerApi
 			if(song == null)
 				return "{}";
 
-			return Util.toJSON(song, urlPath);
+			return Util.toJSONObject(song).toString();
 		}
 		return "{}";
 	}

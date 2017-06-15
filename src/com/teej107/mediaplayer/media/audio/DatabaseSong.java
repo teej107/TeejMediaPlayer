@@ -1,5 +1,6 @@
 package com.teej107.mediaplayer.media.audio;
 
+import com.teej107.mediaplayer.io.db.Column;
 import com.teej107.mediaplayer.io.db.Row;
 import com.teej107.mediaplayer.util.Util;
 import org.jaudiotagger.audio.AudioFile;
@@ -32,37 +33,37 @@ public class DatabaseSong implements ISong
 	@Override
 	public String getArtist()
 	{
-		return row.getObject("artist", String.class);
+		return row.getObject(Column.ARTIST, String.class);
 	}
 
 	@Override
 	public String getGenre()
 	{
-		return row.getObject("genre", String.class);
+		return row.getObject(Column.GENRE, String.class);
 	}
 
 	@Override
 	public String getAlbum()
 	{
-		return row.getObject("album", String.class);
+		return row.getObject(Column.ALBUM, String.class);
 	}
 
 	@Override
 	public int getTrackNumber()
 	{
-		return row.getObject("track_number", Integer.class);
+		return row.getObject(Column.TRACK_NUMBER, Integer.class);
 	}
 
 	@Override
 	public int getYear()
 	{
-		return row.getObject("year", Integer.class);
+		return row.getObject(Column.YEAR, Integer.class);
 	}
 
 	@Override
 	public long getDuration()
 	{
-		return row.getObject("duration_sec", Integer.class);
+		return row.getObject(Column.DURATION_SEC, Integer.class);
 	}
 
 	@Override
@@ -103,6 +104,6 @@ public class DatabaseSong implements ISong
 	@Override
 	public String toString()
 	{
-		return Util.toJSON(this);
+		return Util.toJSONObject(this).toString();
 	}
 }

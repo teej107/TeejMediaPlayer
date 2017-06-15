@@ -4,6 +4,7 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.teej107.mediaplayer.Application;
 import com.teej107.mediaplayer.io.ApplicationPreferences;
+import com.teej107.mediaplayer.platform.Platform;
 import com.teej107.mediaplayer.util.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,6 +43,7 @@ public class TeejMediaServer implements Runnable
 		readServerVersion();
 
 		addJavaCallback("j_getPort", (JavaCallback) (v8Object, v8Array) -> getPort());
+		addJavaCallback("j_getLocalAddress", (JavaCallback) (v8Object, v8Array) -> Platform.getPlatform().getLocalAddress());
 		addJavaCallback("j_getFile", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongFile(v8Array.getString(0)) : null);
 		addJavaCallback("j_getSongJSON", (v8Object, v8Array) -> v8Array.length() > 0 ? serverApi.getSongJSON(v8Array.getString(0)) : null);
 		addJavaCallback("j_getArtists", (JavaCallback) (v8Object, v8Array) -> serverApi.getArtists());
@@ -49,7 +51,7 @@ public class TeejMediaServer implements Runnable
 		addJavaCallback("j_getAlbumArt", (v8Object, v8Array) ->
 		{
 			if (v8Array.length() > 1)
-				return serverApi.getAlbumArt(v8Array.getString(0), v8Array.getString(1));
+				return serverApi.getAlbumArtFromHex(v8Array.getString(0), v8Array.getString(1));
 			return null;
 		});
 

@@ -37,6 +37,7 @@ public class Main
 			app.getMediaServer().install();
 			System.out.println();
 			System.out.println("Server installed");
+			System.out.println();
 		}
 		if (arguments.contains("-server"))
 		{

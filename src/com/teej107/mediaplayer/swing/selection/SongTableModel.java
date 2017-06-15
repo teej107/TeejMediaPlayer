@@ -1,7 +1,6 @@
 package com.teej107.mediaplayer.swing.selection;
 
-import com.teej107.mediaplayer.io.db.CommitListener;
-import com.teej107.mediaplayer.io.db.DatabaseManager;
+import com.teej107.mediaplayer.io.db.*;
 import com.teej107.mediaplayer.media.audio.DatabaseSong;
 
 import javax.swing.event.TableModelListener;
@@ -52,7 +51,7 @@ public class SongTableModel implements TableModel, CommitListener
 	@Override
 	public String getColumnName(int columnIndex)
 	{
-		return columns.get(columnIndex);
+		return Column.toTableName(columns.get(columnIndex));
 	}
 
 	@Override

@@ -1,14 +1,12 @@
 package com.teej107.mediaplayer.io;
 
 import com.teej107.mediaplayer.media.audio.ISong;
-import com.teej107.mediaplayer.util.ImageUtil;
-import com.teej107.mediaplayer.util.Response;
+import com.teej107.mediaplayer.util.*;
 import radams.gracenote.webapi.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -87,7 +85,9 @@ public class AlbumManager
 
 	public Path getAlbumCoverPath(ISong song)
 	{
-		return applicationPreferences.getAlbumArtRootDirectory().resolve(song.getArtist()).resolve(song.getAlbum() + "." + IMAGE_FORMAT);
+		String artist = Util.toHexString(song.getArtist());
+		String album = Util.toHexString(song.getAlbum());
+		return applicationPreferences.getAlbumArtRootDirectory().resolve(artist).resolve(album + "." + IMAGE_FORMAT);
 	}
 
 	public Image getAlbumCover(ISong song)

@@ -11,7 +11,7 @@ const apiController = require('./apiController');
 
 const server = app.listen(port, function ()
 {
-    console.log("listening on port", port);
+    console.log("Hosting on", j_getLocalAddress() + ":" + port);
     console.log("Shutdown Key:", shutdownKey);
 });
 

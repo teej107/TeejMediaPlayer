@@ -16,7 +16,7 @@ public class ApplicationPanel extends JPanel
 	private JSplitPane splitPane;
 	private MusicInfoControlPanel musicInfoControlPanel;
 	private SongTable songTable;
-	private ApplicationStatusBar statusBar;
+	private ApplicationProgressBar statusBar;
 
 	public ApplicationPanel()
 	{
@@ -29,14 +29,10 @@ public class ApplicationPanel extends JPanel
 				musicInfoControlPanel, new JScrollPane(songTable));
 		add(splitPane, BorderLayout.CENTER);
 
-		this.statusBar = new ApplicationStatusBar();
+		this.statusBar = new ApplicationProgressBar();
+		Application.instance().getApplicationProgress().addApplicationStatusListener(statusBar);
 		add(statusBar, BorderLayout.PAGE_END);
 
 		Util.setChildrenUnfocusable(this);
-	}
-
-	public ApplicationStatusBar getStatusBar()
-	{
-		return statusBar;
 	}
 }

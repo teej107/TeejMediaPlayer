@@ -25,9 +25,9 @@ public class Row extends LinkedHashMap<String, Object>
 		return this.keySet();
 	}
 
-	public <T> T getObject(String column, Class<T> t)
+	public <T> T getObject(Object column, Class<T> t)
 	{
-		Object o = get(column);
+		Object o = get(column.toString());
 		if (o == null)
 			return null;
 		if (t.isAssignableFrom(o.getClass()))

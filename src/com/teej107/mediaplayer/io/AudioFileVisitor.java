@@ -1,7 +1,8 @@
 package com.teej107.mediaplayer.io;
 
-import com.teej107.mediaplayer.Application;
-import org.jaudiotagger.audio.SupportedFileFormat;
+import com.teej107.mediaplayer.io.db.DatabaseManager;
+import com.teej107.mediaplayer.media.Audio;
+import com.teej107.mediaplayer.util.ProgressListener;
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -11,25 +12,30 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class AudioFileVisitor extends SimpleFileVisitor<Path>
 {
+
+
+	private int count;
+	private ProgressListener listener;
+	private DatabaseManager databaseManager;
+
+	public AudioFileVisitor(DatabaseManager databaseManager, ProgressListener listener)
+	{
+		this.count = 0;
+		this.listener = listener;
+		this.databaseManager = databaseManager;
+	}
+
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attr)
 	{
-		String fileStr = file.toString();
-		int extIndex = fileStr.lastIndexOf('.');
-		try
+		if (Audio.isSupported(file))
 		{
-			if (extIndex != -1 && SupportedFileFormat.valueOf(fileStr.substring(extIndex + 1).toUpperCase()) != null)
+			if (!databaseManager.addToLibrary(file))
 			{
-				if(!Application.instance().getDatabaseManager().addToLibrary(file))
-				{
-					System.err.println("Failed to add: " + fileStr);
-				}
+				System.err.println("Failed to add: " + file);
 			}
 		}
-		catch (IllegalArgumentException e)
-		{
-
-		}
+		listener.onProgressChange(0, ++count, count);
 		return FileVisitResult.CONTINUE;
 	}
 }
