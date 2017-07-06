@@ -1,6 +1,7 @@
 package com.teej107.mediaplayer;
 
 import com.sun.javafx.application.PlatformImpl;
+import com.teej107.mediaplayer.util.Util;
 
 import javax.swing.*;
 import java.io.*;
@@ -21,19 +22,20 @@ public class Main
 		{
 			System.out.println("Installing server...");
 			AtomicInteger lastNum = new AtomicInteger();
+			final int progressMax = 20;
 			app.getMediaServer().addInstallProgressListener((min, value, max) ->
 			{
 				int percent = (int)((double) value / max * 100);
 				if(percent != lastNum.get())
 				{
 					lastNum.set(percent);
-					if(percent % 5 == 0)
+					if(percent % (100 / progressMax) == 0)
 					{
 						System.out.print("█");
 					}
 				}
 			});
-			System.out.println("████████████████████ [progress]");
+			System.out.println(Util.repeat("█", progressMax, null) + " [progress]");
 			app.getMediaServer().install();
 			System.out.println();
 			System.out.println("Server installed");
@@ -55,6 +57,15 @@ public class Main
 					if (line.contains("-gui"))
 					{
 						showGUI(app);
+					}
+					Thread.yield();
+					try
+					{
+						Thread.sleep(50);
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
 					}
 				}
 			}

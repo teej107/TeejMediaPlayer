@@ -16,7 +16,7 @@ class SongRow extends Component
     render()
     {
         return (
-            <div className="row song-row">
+            <div className="navigation-row song-row">
                 <index>{this.index}</index>
                 <div>
                     <p> { this.song.title } </p>

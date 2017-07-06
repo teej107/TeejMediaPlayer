@@ -57,7 +57,7 @@ class ViewList extends Component
         if (target === e.currentTarget)
             return;
 
-        while (!target.classList.contains("row"))
+        while (!target.classList.contains("navigation-row"))
         {
             target = target.parentElement;
         }
@@ -91,12 +91,12 @@ class ViewList extends Component
     render()
     {
         return (
-            <div id="song-div">
-                <div id="song-div-back" className={this.state.backClass(this.viewHistory.isRoot())}
+            <div id="library-navigation">
+                <div id="library-navigation-back" className={this.state.backClass(this.viewHistory.isRoot())}
                      onClick={this.updateView.bind(this, this.viewHistory.back)}>
                     <img src={UpArrow}/>
                 </div>
-                <div id="song-list" onClick={this.onContentIdClick.bind(this)}>
+                <div id="navigation-list" onClick={this.onContentIdClick.bind(this)}>
                     {this.state.library}
                 </div>
             </div>

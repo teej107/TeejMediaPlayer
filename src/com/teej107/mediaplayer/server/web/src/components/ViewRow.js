@@ -14,7 +14,7 @@ class ViewRow extends Component
     render()
     {
         return (
-            <div className="row">
+            <div className="navigation-row">
                 <index>{this.display}</index>
                 <p>{this.display}</p>
                 <p>&gt;</p>

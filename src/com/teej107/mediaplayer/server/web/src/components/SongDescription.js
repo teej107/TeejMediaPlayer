@@ -4,7 +4,7 @@
 import React, {Component} from "react";
 import AudioPlayer from '../media/AudioPlayer';
 
-class SongInfo extends Component
+class SongDescription extends Component
 {
     constructor(props)
     {
@@ -23,7 +23,7 @@ class SongInfo extends Component
     render()
     {
         return (
-            <div id="song-info">
+            <div id="song-description">
                 <p>{ this.state.title }</p>
                 <p>{ this.state.artist }</p>
                 <p>{ this.state.album }</p>
@@ -32,4 +32,4 @@ class SongInfo extends Component
     }
 }
 
-export default SongInfo
+export default SongDescription
