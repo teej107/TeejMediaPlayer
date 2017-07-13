@@ -70,7 +70,21 @@ class CurrentlyPlaying extends Component
 
         var albumArt = this.refs.albumArt;
         maxHeight = Math.min(maxHeight, this.refs.playerView.offsetWidth);
-        dimension('albumArt', albumArt.naturalWidth * maxHeight / albumArt.naturalHeight, maxHeight)
+        dimension('albumArt', albumArt.naturalWidth * maxHeight / albumArt.naturalHeight, maxHeight);
+
+        this.albumFill(window.innerHeight - 50 < this.refs.playerView.offsetWidth);
+    };
+
+    albumFill = (bool) =>
+    {
+        var playerView = ReactDOM.findDOMNode(this.refs.playerView);
+        var albumArt = ReactDOM.findDOMNode(this.refs.albumArt);
+        playerView.style['background-image'] = bool ? 'url(' + this.state.album + ')' : null;
+        if(bool)
+        {
+            albumArt.style.width = '100%';
+        }
+        albumArt.style.opacity = bool ? 0 : 1;
     };
 
     render()

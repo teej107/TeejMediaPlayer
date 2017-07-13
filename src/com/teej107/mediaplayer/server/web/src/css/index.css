@@ -22,6 +22,10 @@ html, body, #root
     box-shadow: -5px 0 7px -5px #000000, 5px 0 7px -5px #000000;
     border-right: 1px solid lightgrey;
     border-left: 1px solid lightgrey;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 #player-view > div
